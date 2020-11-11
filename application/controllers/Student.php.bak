@@ -1,0 +1,293 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Student extends CI_Controller {
+
+    public function student() {
+        parent::__construct();
+        $this->load->model('Student_model');
+        $this->load->model('hall_model');
+        $this->load->model('course_model');
+        $this->load->model('faculty_model'); 
+   }
+
+    function student_view() {
+        /*  $data['va']= $this->Student_model->edit_student();
+
+          $data['main_content'] = 'add_student_view';
+
+          $data['title'] = 'STUDENT';
+          $this->load->view('includes/template', $data); */
+
+
+        /* if(isset($_GET['student_id']))
+          {
+          $data['stu'] = $_GET['p'];
+          }
+          else
+          {
+          $data['stu'] = null;
+          }
+
+          print_r( $data['stu']); */
+        // $data['edit_stu'] =$this->Student_model->edit_student();
+
+        $data['main_content'] = 'add_student_view';
+        $data['title'] = 'student profile';
+        $this->load->view('includes/template', $data);
+    }
+
+    function save_student() {
+        //post values
+        $data['student_id'] = $this->input->post('student_id');
+
+        $data['sname'] = $this->input->post('sname');
+
+        $data['sfull_name'] = $this->input->post('sfull_name');
+
+        $data['scivil_status'] = $this->input->post('scivil_status');
+        $data['ssex'] = $this->input->post('ssex');
+
+        $data['sdob'] = $this->input->post('sdob');
+
+        $data['sp_birth'] = $this->input->post('sp_birth');
+        $data['sm_number'] = $this->input->post('sm_number');
+
+        $data['se_mail'] = $this->input->post('se_mail');
+
+        $data['snic_no'] = $this->input->post('snic_no');
+        $data['sissues_date'] = $this->input->post('sissues_date');
+
+        $data['sindex_no'] = $this->input->post('sindex_no');
+
+        $data['sid_type'] = $this->input->post('sid_type');
+        $data['sid_no'] = $this->input->post('sid_no');
+
+        $data['scitizen'] = $this->input->post('scitizen');
+
+        $data['srace'] = $this->input->post('srace');
+        $data['sreligion'] = $this->input->post('sreligion');
+
+        $data['sstate_citiznship'] = $this->input->post('sstate_citiznship');
+
+        $data['sordination'] = $this->input->post('sordination');
+        $data['saddress'] = $this->input->post('saddress');
+
+        $data['sa_distric'] = $this->input->post('sa_distric');
+
+        $data['sdistric_no'] = $this->input->post('sdistric_no');
+        $data['stelephone'] = $this->input->post('stelephone');
+
+        $data['sr_year'] = $this->input->post('sr_year');
+
+        $data['sr_month'] = $this->input->post('sr_month');
+        $data['sr_date'] = $this->input->post('sr_date');
+
+        $data['sn_father'] = $this->input->post('sn_father');
+
+        $data['sn_mother'] = $this->input->post('sn_mother');
+        $data['sn_parent'] = $this->input->post('sn_parent');
+
+        $data['sp_address'] = $this->input->post('sp_address');
+
+        $data['stp_no'] = $this->input->post('stp_no');
+        $data['sm_no'] = $this->input->post('sm_no');
+        $data['se_year'] = $this->input->post('se_year');
+
+        $data['se_attems'] = $this->input->post('se_attems');
+
+        $data['se_subject'] = $this->input->post('se_subject');
+        $data['se_grade'] = $this->input->post('se_grade');
+
+        $data['se_medium'] = $this->input->post('se_medium');
+        $data['sz_score'] = $this->input->post('sz_score');
+        $data['scandidate'] = $this->input->post('scandidate');
+
+        $data['sschool'] = $this->input->post('sschool');
+
+
+
+        if (empty($data['student_id'])) {
+
+            //insert
+            $result = $this->student_model->save_student($data);
+            if ($result) {
+                $this->session->set_flashdata('flashSuccess', 'student saved successfully.');
+            } else {
+                $this->session->set_flashdata('flashError', 'Failed to save student. Retry.');
+            }
+        } else {
+            //update
+            $result = $this->student_model->save_student($data);
+            if ($result) {
+                $this->session->set_flashdata('flashSuccess', 'student updated successfully.');
+            } else {
+                $this->session->set_flashdata('flashError', 'Failed to update student. Retry.');
+            }
+        }
+        redirect('student_view');
+    }
+
+    function change_student_status() {
+        //post values
+        $data['student_id'] = $this->input->post('student_id');
+        $data['new_status'] = $this->input->post('new_status');
+        echo json_encode($this->Student_model->update_student_status($data));
+    }
+
+    function stu_update_view() {
+
+        if (isset($_GET['id'])) {
+            $data['stu'] = $_GET['id'];
+        } else {
+            $data['stu'] = null;
+        }
+
+
+        $data['edit_stu'] = $this->Student_model->edit_student($data['stu']);
+
+        //$data['title_new'] = $this->Student_model->get_title();
+        $data['main_content'] = 'student_update_view.php';
+        $data['title'] = 'staff_registration';
+        $this->load->view('includes/template', $data);
+    }
+
+    function stuprof_view() {
+
+        if (isset($_GET['id'])) {
+            $data['stu_id'] = $_GET['id'];
+        } else {
+            $data['stu_id'] = null;
+        }
+
+        $data['stu_data'] = $this->Student_model->view_stu_prof($data['stu_id']);
+        $data['stu_subjects'] = $this->Student_model->get_current_subjects($data['stu_id']);
+        $data['main_content'] = 'student_profile.php';
+        $data['title'] = 'Student Profile';
+        $this->load->view('includes/template', $data);
+    }
+
+    function student_lookup() {
+
+        $data['centers'] = $this->hall_model->get_all_centers();
+        $data['all_faculties'] = $this->faculty_model->all_active_faculties();
+        $data['result_array'] = $this->Student_model->get_all_students();
+        $data['main_content'] = 'student_lookup_view';
+        $data['title'] = 'STUDENT LOOKUP';
+        $this->load->view('includes/template', $data);
+    }
+
+    function student_profile() {
+
+        $data['main_content'] = 'student_profile_view';
+        $data['title'] = 'STUDENT PROFILE';
+        $this->load->view('includes/template', $data);
+    }
+
+    function subject_selection() {
+        $data['centers'] = $this->hall_model->get_all_centers();
+        $data['all_faculties'] = $this->faculty_model->all_active_faculties();
+        $data['main_content'] = 'student_subject_selection_view';
+        $data['title'] = 'STUDENT SUBJECTS SELECTION';
+        $this->load->view('includes/template', $data);
+    }
+
+    function semester_upgrade() {
+
+        $data['main_content'] = 'student_semester_upgrade_view';
+        $data['title'] = 'STUDENT SEMESTER UPGRADE';
+        $this->load->view('includes/template', $data);
+    }
+
+    function student_attendance() {
+
+        $data['main_content'] = 'student_attendance_view';
+        $data['title'] = 'STUDENT ATTENDANCE';
+        $this->load->view('includes/template', $data);
+    }
+
+    function get_student_list() {
+        $batch_id = $this->input->post('batch_id');
+        echo json_encode($this->Student_model->get_students_by_batch($batch_id));
+    }
+
+    function get_student_year_subjects() {
+        $stu_id = $this->input->post('stu_id');
+        echo json_encode($this->Student_model->get_student_year_subjects($stu_id));
+    }
+
+    function save_student_subjects() {
+        //post values
+        $data['center'] = $this->input->post('center');
+        $data['faculty'] = $this->input->post('faculty');
+        $data['course_id'] = $this->input->post('Dcode');
+        $data['batch_id'] = $this->input->post('Bcode');
+        $data['student_id'] = $this->input->post('student');
+        $data['year_no'] = $this->input->post('no_year');
+        $data['semester_no'] = $this->input->post('no_semester');
+        $data['course_id'] = $this->input->post('course_id');
+        //post arrays
+        if (isset($_POST['c_subject'])) {
+            $data['core_subjects'] = $this->input->post('c_subject');
+        }
+        if (isset($_POST['e_subject'])) {
+            $data['elective_subjects'] = $this->input->post('e_subject');
+        }
+        echo json_encode($this->Student_model->save_student_subjects($data));
+    }
+
+    function filter_students_subject_selection() {
+        $data['center_id'] = $this->input->post('center_id');
+        $data['faculty_id'] = $this->input->post('faculty_id');
+        $data['course_id'] = $this->input->post('course_id');
+        $data['year_no'] = $this->input->post('year_no');
+        $data['semester_no'] = $this->input->post('semester_no');
+        $data['batch_id'] = $this->input->post('batch_id');
+
+        echo json_encode($this->Student_model->filter_students_subject_selection($data));
+    }
+
+    function filter_students_batch_lookup() {
+        $data['course_id'] = $this->input->post('course_id');
+        $data['year_no'] = $this->input->post('year_no');
+        $data['semester_no'] = $this->input->post('semester_no');
+        $data['batch_id'] = $this->input->post('batch_id');
+
+        echo json_encode($this->Student_model->filter_students_batch_lookup($data));
+    }
+
+    function update_student_subject_status() {
+        $data['stu_co_id'] = $this->input->post('stu_co_id');
+        $data['new_status'] = $this->input->post('new_status');
+
+        echo json_encode($this->Student_model->update_student_subject_status($data));
+    }
+
+    function get_student_subject_list() {
+        $stu_co_id = $this->input->post('stu_co_id');
+        echo json_encode($this->Student_model->get_student_subject_list($stu_co_id));
+    }
+
+    function students_without_subject() {
+        $data['center_id'] = $this->input->post('center_id');
+//        $data['faculty_id'] = $this->input->post('faculty_id');
+        $data['course_id'] = $this->input->post('course_id');
+        $data['year_no'] = $this->input->post('year_no');
+        $data['semester_no'] = $this->input->post('semester_no');
+        $data['batch_id'] = $this->input->post('batch_id');
+
+        echo json_encode($this->Student_model->students_without_subject($data));
+    }
+
+    //promote student ( anually and semesterwise )
+    function student_promote_view()
+    {
+        // $data['all_faculties'] = $this->faculty_model->all_active_faculties();
+        // $data['result_array'] = $this->Student_model->get_all_students();
+        $data['main_content'] = 'student_promote_view';
+        $data['title'] = 'PROMOTE STUDENT';
+        $this->load->view('includes/template', $data);
+    }
+
+}
