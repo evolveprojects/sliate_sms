@@ -1,0 +1,44 @@
+/* CSS Document */
+body{
+font-family: inherit !important;
+font-weight: normal !important;
+font-size: 15px !important;
+line-height: 1.5 !important;
+text-rendering: optimizeLegibility !important;
+}
+
+/*custom header styles*/
+.sl-header{ background:/*#680000*/ /*#3d9970*/#04632e !important; color:#FFFFFF; padding:0% 15%}
+.sl-top-bar{    background: /*#301818 */ /*#19734b*/ #2ba672!important; color:#FFFFFF;}
+.sl-top-bar ul> li>a{ color:#FFFFFF!important}
+.sl-top-bar ul> li>a:hover {
+    
+    background: /*#680000*/#3d9970;
+   }
+   
+
+/*custom fotter styles*/
+.sl-footer{background:/*#680000*/#3d9970 !important; color:#FFFFFF; padding:1% 0%; font-size:12px; font-weight:normal;}
+.sl-footer a{ color:#FFFFFF; text-decoration:underline;}
+.sl-footer a:hover{ color:#FFFFFF; text-decoration:none;}
+
+/*card styles*/
+.card-title{ font-size:15px!important; font-weight:700}
+.mandatory{ background:#f5f5f5!important;}
+/*.card-header{ background-color: #2ba672; color: #FFFFFF;}*/
+/*.card-head{ background: #2ba672;}*/
+
+/*custom form style*/
+.col-form-label{ font-weight:normal!important; }
+.sl-btn{ background:/*#bd8174*/#19734b; color:#FFFFFF; font-weight:bold;}
+
+/*custom general styles*/	
+.main-padding{ padding:5% 0;}
+.center{ text-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.err{ color:#FF0000; font-size:12px}
+.breadcrumb-item a{color:/*#680000*/#19734b ;}
