@@ -817,10 +817,10 @@ class Exam_model extends CI_Model
                         $mark = $data['subject_mark'][$i];
                     }
 
-                    if ($mark != '') {
+                    if ($mark != null) {
                         $insert_mark_details = array(
                             'exam_mark_id' => $max_exam_mark_id,
-                            'exam_type_id' => $data['type_id'],
+                            'exam_type_id' => $data['type_id'][$i],
                             'persentage' => $data['persentage'][$i],
                             'mark' => $mark,
                             'added_by' => $this->session->userdata('u_id'),

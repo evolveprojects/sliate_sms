@@ -1478,10 +1478,12 @@
 
                             //Set absent or not
                             var is_absent = "";
-                            if (data['exam_mark'][j]['exam_type_id'] == 1 && data['exam_mark'][j]['overall_grade'] == 'AB') {
-                                is_absent = "checked";
-                            } else {
-                                is_absent = "";
+                            if (data['exam_mark'].length > 0) {
+                                if (data['exam_mark'][j]['exam_type_id'] == 1 && data['exam_mark'][j]['overall_grade'] == 'AB') {
+                                    is_absent = "checked";
+                                } else {
+                                    is_absent = "";
+                                }
                             }
 
                             if (user_level == 'ca_mark'){
@@ -1613,12 +1615,17 @@
 
                         //Set exam type and percentage
                         var exam_type;
-                        if (data['exam_mark'][j]['exam_type_id'] == 2) {
+
+                        
+                        //if (data['exam_mark'][j]['exam_type_id'] == 2) {
+                        if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
                             exam_type = "Assignment";
                         } else {
                             exam_type = "Written";
                         }
-                        $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['exam_mark'][j]['persentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['exam_mark'][j]['persentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
+                        $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
+                      
+
                     }
 
                     if (data['exam_mark'].length != 0) {
@@ -2038,6 +2045,13 @@
         }
     }
     
-
+function isset_element(element){
+    if(typeof element === 'undefined') {
+   return false;
+}
+else {
+   return true;
+}
+}
 
 </script>
