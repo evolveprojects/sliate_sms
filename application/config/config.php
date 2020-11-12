@@ -24,7 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://184.171.245.138/~studentsliac18/sliate_sms/';
-$config['base_url'] = 'http://student.sliate.ac.lk/';
+//$config['base_url'] = 'http://student.sliate.ac.lk/';
+$config['base_url'] = 'http://localhost/sliate_sms/';
 
 /*
 |--------------------------------------------------------------------------
