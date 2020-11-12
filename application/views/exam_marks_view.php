@@ -580,6 +580,7 @@
                 $("#subject_mark_save").prop("disabled",false);
                 
                 var pers = $('#pers_'+id +'_2').val();
+              
                 var pre_ca = ((parseFloat((ca_mark*(pers/100)))).toFixed(2)).split('.');
                 var ca_value = pre_ca[1];
                 if(ca_value == '00'){
@@ -677,8 +678,12 @@
                             // var text_id=this.id;
                               inp_perc = $('#pers_' + temp[1] + '_' + temp[2]).val();
 
+                        console.log(obj);//kasun
+                        console.log(this.id);//kasun
+                        console.log(temp);//kasun
 
-                            if(i==0){
+                        if(typeof temp[2] !='undefined'){
+                            if(temp[2]==1){
                                 se_mark=$('#'+this.id).val();
                                 if(se_mark === '' || se_mark === null){
                                     se_mark_for_total=0;
@@ -691,9 +696,11 @@
                                 }
                             }
 
-                            if(i==1){
+                            if(temp[2]==2){
                                 ca_mark=$('#'+this.id).val();
                             }
+
+                        }
 
                         });
                         
@@ -717,9 +724,17 @@
                            $('#subject_mark_save').prop("disabled",false);
                         }
                         
+
+                       
                         if(se_mark<=100 || se_mark==0 ) {
 //                            if(se_mark != 0) {
-                                totalmarks = ((parseFloat(se_mark_for_total) * (1 - inp_perc / 100)) + (parseFloat(ca_mark_for_total) * (inp_perc / 100))).toFixed(2);
+                               totalmarks = ((parseFloat(se_mark_for_total) * (1 - inp_perc / 100)) + (parseFloat(ca_mark_for_total) * (inp_perc / 100))).toFixed(2);
+                               
+
+                                console.log('aa tot :'+totalmarks);
+                                console.log('aa inp :'+inp_perc);
+                                console.log('aa ca:'+ca_mark_for_total);
+                                console.log('aa se :'+se_mark_for_total);
              
                                 if(repeat_status == 1){                                   
                                     for(x=0; x<data.length; x++){
@@ -762,7 +777,7 @@
                             $('#grade_point_' + id).val('0.00');
 
                         }
-                        
+                  
                         if(repeat_status == 1){
                             if(repeat_total != 0)
                             {
@@ -794,6 +809,7 @@
                         }
                         
                         $('#totalmark_' + id).val(totalmarks);
+                        
                     },
                     "json"
                 );
@@ -1451,11 +1467,19 @@
                                 }
                             }
                         } else if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
+
+                            
+                            if (data['exam_mark'].length > 0) {
+                                var exam_mark_index=0;
+                                exam_mark_index= data['exam_mark'].findIndex(x => x.exam_type_id ==="2");
+                            }
+                           // console.log(exam_mark_index);
+                            
                             readonly_text = Assignment_mark;
                             change_function = true;
                             if (data['exam_mark'].length > 0) {
-                                if (data['exam_mark'][j]['detail_is_hod_mark_aproved'] == 1 && data['exam_mark'][j]['detail_is_director_mark_approved'] == 1) {
-                                    if(data['exam_mark'][j]['result'] == "NE" || data['exam_mark'][j]['result'] == "N/E") {
+                                if (data['exam_mark'][exam_mark_index]['detail_is_hod_mark_aproved'] == 1 && data['exam_mark'][exam_mark_index]['detail_is_director_mark_approved'] == 1) {
+                                    if(data['exam_mark'][exam_mark_index]['result'] == "NE" || data['exam_mark'][exam_mark_index]['result'] == "N/E") {
                                         readonly_text = "";
                                     }
                                     else {
@@ -1479,7 +1503,7 @@
                             //Set absent or not
                             var is_absent = "";
                             if (data['exam_mark'].length > 0) {
-                                if (data['exam_mark'][j]['exam_type_id'] == 1 && data['exam_mark'][j]['overall_grade'] == 'AB') {
+                                if (data['exam_mark'][exam_mark_index]['exam_type_id'] == 1 && data['exam_mark'][exam_mark_index]['overall_grade'] == 'AB') {
                                     is_absent = "checked";
                                 } else {
                                     is_absent = "";
@@ -1488,8 +1512,8 @@
 
                             if (user_level == 'ca_mark'){
                                 if (data['exam_mark'].length > 0){
-                                    if (data['exam_mark'][j]['detail_is_hod_mark_aproved'] == 1 && data['exam_mark'][j]['detail_is_director_mark_approved'] == 1){
-                                        if((repeat_status == 1) && (data['exam_mark'][j]['mark'] == null)){
+                                    if (data['exam_mark'][exam_mark_index]['detail_is_hod_mark_aproved'] == 1 && data['exam_mark'][exam_mark_index]['detail_is_director_mark_approved'] == 1){
+                                        if((repeat_status == 1) && (data['exam_mark'][exam_mark_index]['mark'] == null)){
                                             if((data['subject_details']['marking_details'].length == 1) && (data['subject_details']['marking_details'][j]['type_id'] == 2)){ //--ASSIGNMENT ONLY SUBJECT--
                                                 absent_chk = "<input id='absent_chk' type='checkbox' value='"+textbox_id+"' style='display:none' onchange='set_as_absent("+subject_id+","+grading_method_id+","+assignment_only+")'" + is_absent +">";
                                                 readonly_text = "";
@@ -1500,7 +1524,7 @@
                                             }
                                         }
                                         else{
-                                            if(data['exam_mark'][j]['result'] == "NE" || data['exam_mark'][j]['result'] == "N/E"){
+                                            if(data['exam_mark'][exam_mark_index]['result'] == "NE" || data['exam_mark'][exam_mark_index]['result'] == "N/E"){
                                                 if((data['subject_details']['marking_details'].length == 1) && (data['subject_details']['marking_details'][j]['type_id'] == 2)){ //--ASSIGNMENT ONLY SUBJECT--
                                                     absent_chk = "<input id='absent_chk' type='checkbox' value='"+textbox_id+"' style='display:none' onchange='set_as_absent("+subject_id+","+grading_method_id+","+assignment_only+")' " + is_absent +">";
                                                 }
@@ -1510,7 +1534,7 @@
                                                     $("#subject_mark_save").prop("disabled",false);
                                                 }
                                             }
-                                            else if((repeat_status == 1) && (data['exam_mark'][j]['mark'] >= 0)){
+                                            else if((repeat_status == 1) && (data['exam_mark'][exam_mark_index]['mark'] >= 0)){
                                                 absent_chk = "<input id='absent_chk' type='checkbox' value='"+textbox_id+"' onchange='set_as_absent("+subject_id+","+grading_method_id+","+assignment_only+")' " + is_absent +">Mark as Absent";
                                                 readonly_text = "";
                                             }
@@ -1520,7 +1544,7 @@
                                         }
                                     }
                                     else{
-                                        if(data['exam_mark'][j]['exam_type_id'] == 2 && data['exam_mark'][j]['mark'] == null){
+                                        if(data['exam_mark'][exam_mark_index]['exam_type_id'] == 2 && data['exam_mark'][exam_mark_index]['mark'] == null){
                                             if((data['subject_details']['marking_details'].length == 1) && (data['subject_details']['marking_details'][j]['type_id'] == 2)){ //--ASSIGNMENT ONLY SUBJECT--
                                                 absent_chk = "<input id='absent_chk' type='checkbox' value='"+textbox_id+"' style='display:none' onchange='set_as_absent("+subject_id+","+grading_method_id+","+assignment_only+")' " + is_absent +">";
                                             }
@@ -1548,25 +1572,21 @@
                                     }
                                 }
                             }
-                        } else {
-                            readonly_text = "readonly='readonly'";
-                            change_function = '';
-                        }
 
-                        //debugger;
+ //debugger;
 
-                        if (data['exam_mark'][j]) {
-                            if (data['exam_mark'][j]['mark'] === null || data['exam_mark'][j]['mark'] === '') { // when absent mark is null
+                        if (data['exam_mark'][exam_mark_index]) {
+                            if (data['exam_mark'][exam_mark_index]['mark'] === null || data['exam_mark'][exam_mark_index]['mark'] === '') { // when absent mark is null
                                 var subject_mark = '';
                             } else {
-                                var pre_mark = data['exam_mark'][j]['mark'].split('.');
+                                var pre_mark = data['exam_mark'][exam_mark_index]['mark'].split('.');
                                 var decimalvalue = pre_mark[1];
 
                                 if(decimalvalue == '00'){
                                    var subject_mark = pre_mark[0];
                                 }
                                 else{
-                                    var subject_mark = data['exam_mark'][j]['mark'];
+                                    var subject_mark = data['exam_mark'][exam_mark_index]['mark'];
                                 }
                             }
                         } else {
@@ -1577,7 +1597,7 @@
 
                         if (user_level == 'ca_mark') {
                             if(data['exam_mark'].length > 0) {
-                                if(data['exam_mark'][j]['exam_type_id'] == 1){
+                                if(data['exam_mark'][exam_mark_index]['exam_type_id'] == 1){
                                     var mark_value = "<input type='hidden' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
                                 }
                                 else {
@@ -1618,13 +1638,26 @@
 
                         
                         //if (data['exam_mark'][j]['exam_type_id'] == 2) {
+                            var percentage_index=0;
                         if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
+                            percentage_index=data['subject_details']['marking_details'].findIndex(x => x.type_id ==="2");
                             exam_type = "Assignment";
                         } else {
                             exam_type = "Written";
+                            percentage_index=data['subject_details']['marking_details'].findIndex(x => x.type_id ==="1");
                         }
-                        $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
+                        $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
                       
+
+
+
+
+                        } else {
+                            readonly_text = "readonly='readonly'";
+                            change_function = '';
+                        }
+
+                       
 
                     }
 
@@ -1643,9 +1676,13 @@
                         }
 
                         if (user_level == 'ca_mark'){
+                            
                             var totmark_prec_ca = ((data['exam_mark'][data['exam_mark'].length-1]['mark']) * ((data['exam_mark'][data['exam_mark'].length-1]['persentage'])/100)).toFixed(2);
                             var pre_totmark_ca = totmark_prec_ca.split('.');
                             var pre_mark_total_ca = pre_totmark_ca[1];
+                            console.log(totmark_prec_ca);
+                            console.log(pre_totmark_ca);
+                            console.log(pre_mark_total_ca);
 
                             if(pre_mark_total_ca == '00'){
                                 var total_marks = pre_totmark_ca[0];

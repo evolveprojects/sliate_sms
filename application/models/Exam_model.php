@@ -770,10 +770,11 @@ class Exam_model extends CI_Model
     function save_exam_marks($data,$flag)
     {
         $res = [];
-
+        
         if($flag)
         $this->db->trans_begin();
         $mark_id = $this->check_subject_mark_exists($data);
+        
        // $sem_exam_id = $this->get_semester_exam_id($data);
         $sem_exam_id = $data['exam_id'];
         if ($sem_exam_id == NULL) {
@@ -942,7 +943,7 @@ class Exam_model extends CI_Model
 
                             $insert_mark_details = array(
                                 'exam_mark_id' => $max_exam_mark_id,
-                                'exam_type_id' => $data['type_id'],
+                                'exam_type_id' => $data['type_id'][$i],
                                 'persentage' => $data['persentage'][$i],
                                 'mark' => $save_mark,                            
                                 'is_hod_mark_aproved' => $exam_mark_detail_hod,
@@ -1012,7 +1013,7 @@ class Exam_model extends CI_Model
         //update hc_mark_details
         $existing_detail_ids = $this->get_mark_detail_to_save_mark($mark_id);
         foreach ($existing_detail_ids as $existing_detail_id) {
-            if ($existing_detail_id['exam_type_id'] == $data['type_id'] ) {
+            if ($existing_detail_id['exam_type_id'] == $data['type_id'][0] ) {
                 for ($i = 0; $i < count($data['persentage']); $i++) {
                     if($data['subject_mark'][$i] == '' || $data['subject_mark'][$i] == null || $data['overall_grade'] == 'AB'){
                         $save_mark = null;
@@ -1021,7 +1022,7 @@ class Exam_model extends CI_Model
                     }
                     $update_mark_details = array(
                         'exam_mark_id' => $mark_id,
-                        'exam_type_id' => $data['type_id'],
+                        'exam_type_id' => $data['type_id'][$i],
                         'persentage' => $data['persentage'][$i],
                         'mark' => $save_mark,
                         'updated_by' => $this->session->userdata('u_id'),
