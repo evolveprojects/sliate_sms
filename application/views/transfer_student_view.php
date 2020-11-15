@@ -2071,7 +2071,7 @@
         //$('.se-pre-con').fadeOut('slow');
         //$('.se-pre-con').fadeIn('slow');
         //$('.se-pre-con').show();
-        //$(".se-pre-con").css("display", "block");
+        //$(".se-pre-con").css("display", "block"); kasun
         $.ajax(
             {
                 url: "<?php echo base_url('upload_exam_marks/get_student_details_for_excel_file_upload')  ?>",
@@ -2092,6 +2092,7 @@
 
                 },
                 success: function (data) {
+                    console.log(data);
                     // console.log("success");
                     //$('.se-pre-con').fadeIn('slow');
                     //$('.se-pre-con').hide();

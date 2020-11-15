@@ -1011,48 +1011,54 @@ class Exam_model extends CI_Model
         $this->db->update('exm_mark', $update_exam_mark);
 
         //update hc_mark_details
-        $existing_detail_ids = $this->get_mark_detail_to_save_mark($mark_id);
-        foreach ($existing_detail_ids as $existing_detail_id) {
-            if ($existing_detail_id['exam_type_id'] == $data['type_id'][0] ) {
-                for ($i = 0; $i < count($data['persentage']); $i++) {
-                    if($data['subject_mark'][$i] == '' || $data['subject_mark'][$i] == null || $data['overall_grade'] == 'AB'){
-                        $save_mark = null;
-                    } else {
-                        $save_mark = $data['subject_mark'][$i];
+        $existing_detail_ids = $this->get_mark_detail_to_save_mark($mark_id,$data['type_id'][0]);
+
+
+        if(sizeof($existing_detail_ids) >0)
+        {
+            foreach ($existing_detail_ids as $existing_detail_id) {
+               // if ($existing_detail_id['exam_type_id'] == $data['type_id'][0] ) {
+                    for ($i = 0; $i < count($data['persentage']); $i++) {
+                        if($data['subject_mark'][$i] == '' || $data['subject_mark'][$i] == null || $data['overall_grade'] == 'AB'){
+                            $save_mark = null;
+                        } else {
+                            $save_mark = $data['subject_mark'][$i];
+                        }
+                        $update_mark_details = array(
+                            'exam_mark_id' => $mark_id,
+                            'exam_type_id' => $data['type_id'][$i],
+                            'persentage' => $data['persentage'][$i],
+                            'mark' => $save_mark,
+                            'updated_by' => $this->session->userdata('u_id'),
+                            'updated_on' => date("Y-m-d h:i:s", now())
+                        );
+                        $this->db->where('id', $existing_detail_id['id']);
+                        $this->db->update('exm_mark_details', $update_mark_details);
                     }
-                    $update_mark_details = array(
+               // } 
+            }
+        }else {
+            for ($i = 0; $i < count($data['persentage']); $i++) {
+                if($data['subject_mark'][$i] == '' || $data['subject_mark'][$i] == null || $data['overall_grade'] == 'AB'){
+                    $save_mark = null;
+                } else {
+                    $save_mark = $data['subject_mark'][$i];
+                }
+
+                if ($save_mark != '') {
+                    $insert_mark_details = array(
                         'exam_mark_id' => $mark_id,
                         'exam_type_id' => $data['type_id'][$i],
                         'persentage' => $data['persentage'][$i],
                         'mark' => $save_mark,
-                        'updated_by' => $this->session->userdata('u_id'),
-                        'updated_on' => date("Y-m-d h:i:s", now())
+                        'added_by' => $this->session->userdata('u_id'),
+                        'added_on' => date("Y-m-d h:i:s", now())
                     );
-                    $this->db->where('id', $existing_detail_ids[$i]['id']);
-                    $this->db->update('exm_mark_details', $update_mark_details);
-                }
-            } else {
-                for ($i = 0; $i < count($data['persentage']); $i++) {
-                    if($data['subject_mark'][$i] == '' || $data['subject_mark'][$i] == null || $data['overall_grade'] == 'AB'){
-                        $save_mark = null;
-                    } else {
-                        $save_mark = $data['subject_mark'][$i];
-                    }
-
-                    if ($save_mark != '') {
-                        $insert_mark_details = array(
-                            'exam_mark_id' => $mark_id,
-                            'exam_type_id' => $data['type_id'],
-                            'persentage' => $data['persentage'][$i],
-                            'mark' => $save_mark,
-                            'added_by' => $this->session->userdata('u_id'),
-                            'added_on' => date("Y-m-d h:i:s", now())
-                        );
-                        $this->db->insert('exm_mark_details', $insert_mark_details);
-                    }
+                    $this->db->insert('exm_mark_details', $insert_mark_details);
                 }
             }
         }
+
 
         if($flag){
             if ($this->db->trans_status() === FALSE) {
@@ -1081,10 +1087,11 @@ class Exam_model extends CI_Model
         $result = $this->db->get('exm_mark_details')->row_array();
         return $result;
     }
-    function get_mark_detail_to_save_mark($exam_mark_id)
+    function get_mark_detail_to_save_mark($exam_mark_id,$exam_type_id)
     {
         $this->db->select('*');
         $this->db->where('exam_mark_id', $exam_mark_id);
+        $this->db->where('exam_type_id', $exam_type_id);
         $this->db->where('deleted', 0);
         $result = $this->db->get('exm_mark_details')->result_array();
         return $result;
