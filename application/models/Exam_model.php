@@ -812,7 +812,7 @@ class Exam_model extends CI_Model
 
                 //insert to exm_exam_mark_details
                 for ($i = 0; $i < count($data['persentage']); $i++) {
-                    if ($data['subject_mark'][$i] == '') {
+                    if ($data['subject_mark'][$i] ==='') {
                         $mark = null;
                     } else {
                         $mark = $data['subject_mark'][$i];

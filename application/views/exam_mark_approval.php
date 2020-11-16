@@ -2169,74 +2169,78 @@ function rpt_get_course_code(course_id, lookup_flag) {
 
 
                                     //console.log(data[j]['exam_mark']);
-                                    for (z = 0; z < data[j]['exam_mark'].length; z++) {//btn btn-warning btn-xs
-                                        var link_id = '';
-                                        if (data[j]['exam_mark'][z]['is_director_mark_approved'] == 1) {
-                                            var style_class = 'btn btn-success btn-xs';
-                                            var tooltip = 'Approved';
-                                            var onchange_function = 'onclick="event.preventDefault();approval_notify()"';
-                                            link_id = data[j]['stu_id'] + '_subject_mark_' + data[j]['exam_mark'][z]['subject_id'];
-                                            $('#84_subject_mark_CRS01').removeAttr("href");
-                                            // alert(link_id);
-                                            //$('#'+link_id).unbind('click');
+                                    for (z = 0; z < data[j]['exam_mark'].length; z++){//btn btn-warning btn-xs
 
-                                            dir_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                        if(data[j]['exam_mark'][z]['exam_type_id'] == 2){
+                                            var link_id = '';
+                                            if (data[j]['exam_mark'][z]['is_director_mark_approved'] == 1) {
+                                                var style_class = 'btn btn-success btn-xs';
+                                                var tooltip = 'Approved';
+                                                var onchange_function = 'onclick="event.preventDefault();approval_notify()"';
+                                                link_id = data[j]['stu_id'] + '_subject_mark_' + data[j]['exam_mark'][z]['subject_id'];
+                                                $('#84_subject_mark_CRS01').removeAttr("href");
+                                                // alert(link_id);
+                                                //$('#'+link_id).unbind('click');
 
-                                        }
-                                        else {
-                                            var style_class = 'btn btn-warning btn-xs';
-                                            var tooltip = 'To be Approve ';
-                                            var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"';
-
-                                            bulk_approve_subjects[data[j]['stu_id']][z] = data[j]['exam_mark'][z]['subject_id'];
-
-                                            ////////// check if condition for re correction ///////////
-                                            if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
-                                                dir_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
-                                            }
-                                            else{
                                                 dir_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+
                                             }
-                                        }
+                                            else {
+                                                var style_class = 'btn btn-warning btn-xs';
+                                                var tooltip = 'To be Approve ';
+                                                var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"';
 
+                                                bulk_approve_subjects[data[j]['stu_id']][z] = data[j]['exam_mark'][z]['subject_id'];
 
-                                        var approval_btn = '<button id="mark_approval" title="' + tooltip + '" ' + onchange_function + '   class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
-
-                                        if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
-
-//                                            var pre_mrk = data[j]['exam_mark'][z]['total_marks'].split('.');
-//                                            var decivalue = pre_mrk[1];
-//
-//                                            if(decivalue == '00'){
-//                                               var subjectmrk = pre_mrk[0];
-//                                            }
-//                                            else{
-//                                                var subjectmrk = data[j]['exam_mark'][z]['total_marks'];
-//                                            }
-
-                                            var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
-
-                                            var pre_exammark_ca = exammark_prec_ca.split('.');
-
-                                            var pre_exam_total_ca = pre_exammark_ca[1];
-
-                                            if(pre_exam_total_ca == '00'){
-                                                var subjectmrk = pre_exammark_ca[0];
-                                            }
-                                            else{
-                                                var subjectmrk = exammark_prec_ca;
+                                                ////////// check if condition for re correction ///////////
+                                                if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
+                                                    dir_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                }
+                                                else{
+                                                    dir_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                }
                                             }
 
-//                                            if(data[j]['exam_mark'][z]['subj_approved'] > 2){
-//                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-//                                            }
-//                                            else{
-                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjectmrk + "<br>" + approval_btn;
-                                            //}
-                                        } else {
-                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'HOD Not Approved';
 
-                                        }
+                                            var approval_btn = '<button id="mark_approval" title="' + tooltip + '" ' + onchange_function + '   class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
+
+                                            if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
+
+                                                //                                            var pre_mrk = data[j]['exam_mark'][z]['total_marks'].split('.');
+                                                //                                            var decivalue = pre_mrk[1];
+                                                //
+                                                //                                            if(decivalue == '00'){
+                                                //                                               var subjectmrk = pre_mrk[0];
+                                                //                                            }
+                                                //                                            else{
+                                                //                                                var subjectmrk = data[j]['exam_mark'][z]['total_marks'];
+                                                //                                            }
+
+                                                    var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);
+                                                // var exammark_prec_ca = '99.00'//((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);
+
+                                                    var pre_exammark_ca = exammark_prec_ca.split('.');
+
+                                                    var pre_exam_total_ca = pre_exammark_ca[1];
+
+                                                    if(pre_exam_total_ca == '00'){
+                                                        var subjectmrk = pre_exammark_ca[0];
+                                                    }
+                                                    else{
+                                                        var subjectmrk = exammark_prec_ca;
+                                                    }
+
+                                                //                                            if(data[j]['exam_mark'][z]['subj_approved'] > 2){
+                                                //                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
+                                                //                                            }
+                                                //                                            else{
+                                                    subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjectmrk + "<br>" + approval_btn;
+                                                //}
+                                            } else {
+                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'HOD Not Approved';
+
+                                            }
+                                                      }
                                     }
 
                                     //console.log(subjects_marks);
@@ -2244,10 +2248,10 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                         .map(e => `<td style="`+dir_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#exam_marks_load_student'));
-                                    applied_subjects = [];
-                                    subjects_marks = {};
-                                    dir_style_cell = [];
-//
+                                        applied_subjects = [];
+                                        subjects_marks   = {};
+                                        dir_style_cell   = [];
+                                        //
                                 }
                             $('.se-pre-con').fadeOut('slow');
                             } else {
@@ -2577,7 +2581,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
 
                                     //console.log(data[j]['exam_mark']);
                                     for (z = 0; z < data[j]['exam_mark'].length; z++) {//btn btn-warning btn-xs
-                                        if((data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['mark'] > 0 && data[j]['exam_mark'][z]['result'] != "-") || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'AB') || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'DFR') || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'NE')){
+                                        if((data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['mark'] >= 0 && data[j]['exam_mark'][z]['result'] != "-") || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'AB') || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'DFR') || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'NE')){
 
                                             if (data[j]['exam_mark'][z]['is_ex_director_mark_approved'] == 1) {
                                                 var style_class = 'btn btn-success btn-xs';
@@ -2586,13 +2590,13 @@ function rpt_get_course_code(course_id, lookup_flag) {
 
                                                 style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
 
-//                                                ////////// check if condition for re correction ///////////
-//                                                if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
-//                                                    style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
-//                                                }
-//                                                else{
-//                                                    style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
-//                                                }
+                                                //                                                ////////// check if condition for re correction ///////////
+                                                //                                                if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
+                                                //                                                    style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                //                                                }
+                                                //                                                else{
+                                                //                                                    style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                //                                                }
                                             }
                                             else {
                                                 var style_class = 'btn btn-warning btn-xs';
@@ -2653,7 +2657,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                                 
                                             }else{
                                                 if(data[j]['exam_mark'][z]['is_attend'] == 0){
-                                                    subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjmrk + "/ AB<br>" + approval_btn;//" + data[j]['exam_mark'][z]['result'] + "
+                                                    subjects_marks[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['total_marks'] + "/ "+ data[j]['exam_mark'][z]['result'] + "<br>" + approval_btn;//" + data[j]['exam_mark'][z]['result'] + "
                                                    
                                                 }
 

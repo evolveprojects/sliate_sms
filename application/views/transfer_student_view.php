@@ -2076,8 +2076,8 @@
             {
                 url: "<?php echo base_url('upload_exam_marks/get_student_details_for_excel_file_upload')  ?>",
                 type: 'POST',
-                async: false,
-                cache: false,
+               // async: false,
+               // cache: false,
                 dataType: 'json',
                 data: {
                     'excelRows': excelRows,
@@ -2101,7 +2101,7 @@
                     $('#fileUpload').attr('value', '');
                     
                     $(".se-pre-con").css("display", "none");
-                    console.log(data['status']);
+                   /* console.log(data['status']);
                     if (data['status'] == "success" ) {
 
                         data1['status'] = 'success';
@@ -2111,7 +2111,7 @@
                         data1['status'] = 'denied';
                         data1['message'] = 'Bulk student marks updated failed to be updated successfully!';
                         result_notification(data1);
-                    }
+                    }*/
                 }
             }
         );

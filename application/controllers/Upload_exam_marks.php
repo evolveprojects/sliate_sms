@@ -66,15 +66,33 @@ class Upload_exam_marks extends CI_Controller
             $data['sem_exam_id'] = $this->input->post('sem_exam_id');
             $data['center_id'] = $this->input->post('center_id');
             //print_r($excelRows);
+           // return $excelRows;
             foreach ($excelRows as $row) {
                 $ca_mark = '';
                 $se_mark = '';
-                if (($row['Marks'] != '') && (!empty($row['SubjectName'])) && (!empty($row['StudentRegNo'])) && (!empty($row['ExamType']))) {
+                $is_attend =0;
+                $absent_reson_approve=0;
+                if ( (!empty($row['SubjectName'])) && (!empty($row['StudentRegNo'])) && (!empty($row['ExamType']))) {
                     $data['StudentRegNo'] = $row['StudentRegNo'];
                     $data['SubjectName'] = $row['SubjectName'];
                     $data['CourseCode'] = $row['CourseCode'];
-                    $data['Marks'] = $row['Marks'];
+                   
                     $data['ExamType'] = $row['ExamType'];
+                    if (array_key_exists('Remarks', $row)) {
+                        
+                        $data['Remarks'] = $row['Remarks'];
+                    }else{
+                        $data['Remarks'] = ' ';
+                    }
+                    
+                    if (array_key_exists('Marks', $row)) {
+                       
+                        $data['Marks'] = $row['Marks'];
+                    }else{
+                        $data['Marks'] = 0;
+                    }
+                    
+                  
                    
                     $students_data = $this->Subject_model->get_student_details_and_upload($data);
 
@@ -110,8 +128,19 @@ class Upload_exam_marks extends CI_Controller
                                     $is_attend = $isAttendAbsentApprove['is_attend'];
                                     $absent_reson_approve = $isAttendAbsentApprove['is_absent_approve'];
                                 }*/ //this function disable because some attendance are not entered (disable emergency purposes ) 
-                                $is_attend =1;//temp variable
-                                $absent_reson_approve='';//temp variable
+                                
+
+                                if($data['Remarks']=='AB'){
+                                    $is_attend =0;
+                                    $absent_reson_approve=0;
+
+                                }elseif($data['Remarks']=='DFR'){
+                                    $is_attend =0;
+                                    $absent_reson_approve=1;
+                                }else{
+                                    $is_attend =1;
+                                    $absent_reson_approve=0;
+                                }
 
                                 if (($data['ExamType'] == 'CA') && ($markingDetail['type_id'] == 2)) {
                                     //for CA marks
@@ -181,7 +210,7 @@ class Upload_exam_marks extends CI_Controller
                                         $loadData['student_id'] = $student_id;
                                         $loadData['subject_id'] = $subject_id;
                                         $load_student_wise_exam_marks = $this->Student_model->load_student_wise_exam_marks_for_file_upload($loadData);
-                                        //var_dump($load_student_wise_exam_marks);
+                                       // var_dump($load_student_wise_exam_marks);
                                         if (!empty($load_student_wise_exam_marks)) {
                                             foreach ($load_student_wise_exam_marks as $exammark) {
                                                 foreach ($exammark['exam_mark'] as $marks) {
@@ -189,6 +218,9 @@ class Upload_exam_marks extends CI_Controller
                                                     if ($marks['exam_type_id'] == 2) {
                                                         $ca_type_in_db = $marks['exam_type_id'];
                                                         $ca_percentage_in_db = $marks['persentage'];
+                                                        if($marks['result']==='AB')
+                                                        $ca_mark_for_total = '';
+                                                        else
                                                         $ca_mark_for_total = $marks['mark'];
                                                     }
                                                 }
@@ -202,9 +234,14 @@ class Upload_exam_marks extends CI_Controller
                                         $persentage[0] = $se_percentage;
                                         $subject_mark[0] = $se_mark;
 
-                                        if (($se_mark <= 100) || ($se_mark ==0)) 
-                                        {
-                                            $totalmarks = (($se_mark_for_total/100) * $se_percentage) + ($ca_percentage_in_db * ($ca_mark_for_total/100));
+                                        if (($se_mark <= 100) || ($se_mark == 0))                                        {
+
+                                            if($ca_mark_for_total=='')
+                                            $ca_mark_for=0;
+                                            else
+                                            $ca_mark_for=$ca_mark_for_total;
+
+                                            $totalmarks = (($se_mark_for_total/100) * $se_percentage) + ($ca_percentage_in_db * ($ca_mark_for/100));
 
 
                                             $overall_grade=  $this->subjectgrade->overall_grade($markingDetail['grading_method_id'],$totalmarks,false);//$grade_method__id, $mark, $is_rate
@@ -245,7 +282,7 @@ class Upload_exam_marks extends CI_Controller
 
                                         }else{
                                             //invalid mark
-                                        }
+                                       }
 
                                         //if(se_mark<=100 || se_mark==0 ) {
     
