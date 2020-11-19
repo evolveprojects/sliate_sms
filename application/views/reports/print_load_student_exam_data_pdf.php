@@ -90,13 +90,15 @@ $authority = '';
 $authority_date = '';
 
 //$ug_level = 1;
+$subject_col_width=round(76/count($student_exam_subject_array));
+
 
 foreach($student_exam_subject_array[(count($student_exam_subject_array) - 1)]['lecturer_subject']  as $subj){
 
-    $subjectHeaders .= '<th align="center"><b>'.$subj['subject'].'<br/>['.$subj['code'].']</b></th>';  
+    $subjectHeaders .= '<th align="center" style="width: '.$subject_col_width.'%;"><b>'.$subj['subject'].'<br/>['.$subj['code'].']</b></th>';  
     array_push($header_subj, $subj['code']);
 }
-$subjectHeaders .= '<th align="center"><b>SGPA</b></th>';
+$subjectHeaders .= '<th align="center" style="width: 5%;"><b>SGPA</b></th>';
 
 
 $y = 1;
@@ -164,26 +166,29 @@ foreach ($student_exam_mark_array as $va) {
  
     for ($t = 0; $t < count($header_subj); $t++) {        
         if(in_array($header_subj[$t], $body_subj)){                
-            $subjects .= '<td align="center">'.$subjects_marks[$header_subj[$t]].'</td>';
+            $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">'.$subjects_marks[$header_subj[$t]].'</td>';
         }
         else{
-            $subjects .= '<td align="center">INC</td>';
+            $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">INC</td>';
         }               
     }
     
     if($rel_result == 1){
-        $subjects .= '<td align="center">Results not released.</td>';
+        $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">Results not released.</td>';
     }
     else{
-        $subjects .= '<td align="center">'.$va['gpa'].'</td>';
+        if($va['gpa']=='')
+        $subjects .= '<td align="center" style="width:5%">- </td>';
+        else
+        $subjects .= '<td align="center" style="width:5%">'.$va['gpa'].'</td>';
     }
     
     
     
     $item .= '<tr nobr="true" style="height: 20px;">'.
-            '<td align="center">'.$y.'</td>'.
-            '<td align="center">' . $va['reg_no'] . '</td>'.
-            '<td>' . $va['first_name'] . '</td>'.
+            '<td align="center" style="width: 4%;">'.$y.'</td>'.
+            '<td align="center" style="width: 11%;">' . $va['reg_no'] . '</td>'.
+            '<td style="width: 15%;">' . $va['first_name'] . '</td>'.
             $subjects.
             '</tr>';
   
@@ -224,12 +229,12 @@ function searchArray($nameKey, $myArray){
 
 
     
-$content = '<table border="0.5" style="width:100%; vertical-align:center;" cellspacing="0" cellpadding="5">'.
+$content = '<table border="0.5" style="width:100%; vertical-align:center;" cellspacing="0" cellpadding="5" >'.
         '<thead>'.
         '<tr>'.
-        '<th align="center"><b>No</b></th>'.
-        '<th align="center"><b>Index No</b></th>'.
-        '<th align="center"><b>Name with Initials</b></th>'.
+        '<th align="center" style="width: 4%;"><b>No</b></th>'.
+        '<th align="center" style="width: 11%;"><b>Index No</b></th>'.
+        '<th align="center" style="width: 15%;"><b>Name with Initials</b></th>'.
         $subjectHeaders.
         '</tr>'.
         '</thead>'.
