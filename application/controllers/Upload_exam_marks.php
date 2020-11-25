@@ -71,6 +71,9 @@ class Upload_exam_marks extends CI_Controller
                 $ca_mark = '';
                 $se_mark = '';
                 $is_attend =0;
+                $is_fraud =0;
+                $fraud_id =0;
+                $is_hold =0;
                 $absent_reson_approve=0;
                 if ( (!empty($row['SubjectName'])) && (!empty($row['StudentRegNo'])) && (!empty($row['ExamType']))) {
                     $data['StudentRegNo'] = $row['StudentRegNo'];
@@ -95,7 +98,7 @@ class Upload_exam_marks extends CI_Controller
                   
                    
                     $students_data = $this->Subject_model->get_student_details_and_upload($data);
-
+                   // print_r($students_data) ;
                     $course_id = $data['course_id'];
                     $year_no = $data['year_no'];
                     $sem_no = $data['semester_no'];
@@ -137,7 +140,26 @@ class Upload_exam_marks extends CI_Controller
                                 }elseif($data['Remarks']=='DFR'){
                                     $is_attend =0;
                                     $absent_reson_approve=1;
-                                }else{
+                                }elseif($data['Remarks']=='FR'){
+
+                                    $is_attend =1;
+                                    $absent_reson_approve=0;
+                                    $is_fraud=1;
+                                    $is_hold=1;
+                                    
+                                    $FRSaveData['course_id'] = $course_id;
+                                    $FRSaveData['year_no'] = $year_no;
+                                    $FRSaveData['semester_no'] = $sem_no;
+                                    $FRSaveData['batch_id'] = $batch_no;
+                                    $FRSaveData['sem_exam_id'] = $data['sem_exam_id'];
+
+                                    $FRSaveData['stu_id'] = $student_id;
+                                    $FRSaveData['subject_id'] = $subject_id;
+                                    $FRSaveData['fraud_description'] = 'Upload by excel';
+                                    $fraud_id=$this->exam_model->add_fraud_student($FRSaveData);
+
+                                }
+                                else{
                                     $is_attend =1;
                                     $absent_reson_approve=0;
                                 }
@@ -176,6 +198,10 @@ class Upload_exam_marks extends CI_Controller
                                             $saveData['subject_point'] = $subject_credits;
                                             $saveData['repeat_val'] = '0';
                                             $saveData['mark_type'] = $mark_type;
+                                            $saveData['fraud_status'] = $is_fraud;
+                                            $saveData['ishold'] = $is_hold;
+                                            $saveData['fraud_id'] = $fraud_id;
+                                            
                                             $this->exam_model->save_exam_marks($saveData,true);
 
                                             $saveData['status'] = 1;
@@ -267,6 +293,9 @@ class Upload_exam_marks extends CI_Controller
                                                 $saveData['subject_point'] = $subject_credits;
                                                 $saveData['repeat_val'] = '0';
                                                 $saveData['mark_type'] = $mark_type;
+                                                $saveData['fraud_status'] = $is_fraud;
+                                                $saveData['ishold'] = $is_hold;
+                                                $saveData['fraud_id'] = $fraud_id;
                                                 $this->exam_model->save_exam_marks($saveData,true);
 
                                                 $saveData['status'] = 1;

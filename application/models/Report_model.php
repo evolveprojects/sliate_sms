@@ -2958,6 +2958,17 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
             $result_array[$i]['applied_subjects'] = $this->db->get('exam_applied_subjects_of_student_view es')->result_array();
             $result_array[$i]['gpa'] = $this->get_student_gpa_value($result_array[$i]['stu_id'], $data['year_no'], $data['semester_no']);
 
+             //get fraud status
+             $this->db->select('count(stu_id) as fraud_status');
+             $this->db->where('course_id', $data['course_id']);
+             $this->db->where('batch_id', $data['batch_id']);
+             $this->db->where('year_no', $data['year_no']);
+             $this->db->where('semester_no', $data['semester_no']);
+             $this->db->where('sem_exam_id', $data['exam_id']);
+             $this->db->where('stu_id', $result_array[$i]['stu_id']);
+             $fraudStatus=$this->db->get('exam_fraud_students ')->result_array();
+             $result_array[$i]['fraud_status']=$fraudStatus[0]['fraud_status'];
+
             //$this->db->select('*');
             $this->db->select('em.result,em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,'
                     . 'em.is_hod_mark_aproved,em.is_director_mark_approved,em.deleted,em.exam_status,'
@@ -4820,6 +4831,16 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->where('se.student_id', $result_array['students'][$i]['stu_id']);
             $result_array['students'][$i]['stu_sem_applied_subjects'] = $this->db->get('exam_applied_subjects_of_student_view se')->result_array();
 
+            //get fraud status
+            $this->db->select('count(stu_id) as fraud_status');
+            $this->db->where('course_id', $data['course_id']);
+            $this->db->where('batch_id', $data['batch_id']);
+            $this->db->where('year_no', $data['year_no']);
+            $this->db->where('semester_no', $data['semester_no']);
+            $this->db->where('sem_exam_id', $data['exam_id']);
+            $this->db->where('stu_id', $result_array['students'][$i]['stu_id']);
+            $fraudStatus=$this->db->get('exam_fraud_students ')->result_array();
+            $result_array['students'][$i]['fraud_status']=$fraudStatus[0]['fraud_status'];
 
             //$this->db->select('*');
             $this->db->select('es.subject_type, es.subject_code, es.is_approved, es.is_repeat');

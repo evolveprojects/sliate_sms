@@ -501,10 +501,10 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
         $('#exam').append('<option value="">---Select Exam---</option>').val('');
         $('#mark_exam').find('option').remove().end();
         $('#mark_exam').append('<option value="">---Select Exam---</option>').val('');
-//            $('#exam1').find('option').remove().end().append('<option value=""></option>').val('');
-//            //$('#exam2').find('option').remove().end().append('<option value=""></option>').val('');
-//            $('#lecture_ttbl_exam').find('option').remove().end().append('<option value=""></option>').val('');
-//            $('#exam_ttbl_exam').find('option').remove().end().append('<option value=""></option>').val('');
+        //            $('#exam1').find('option').remove().end().append('<option value=""></option>').val('');
+        //            //$('#exam2').find('option').remove().end().append('<option value=""></option>').val('');
+        //            $('#lecture_ttbl_exam').find('option').remove().end().append('<option value=""></option>').val('');
+        //            $('#exam_ttbl_exam').find('option').remove().end().append('<option value=""></option>').val('');
 
 
         //if(flag ===1){
@@ -513,16 +513,16 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                 for (var i = 0; i < data.length; i++) {
                     $('#exam').append($("<option></option>").attr("value", data[i]['exam_id']).text(data[i]['exam_code']+" - "+data[i]['exam_name']));
                     $('#mark_exam').append($("<option></option>").attr("value", data[i]['exam_id']).text(data[i]['exam_code']+" - "+data[i]['exam_name']));
-//                                if (lookup_flag) {
-//                                    $('#exam').append($("<option></option>").attr("value", data[i]['id']).text(data[i]['exam_code']));
-//                                }
-//                                else  {
-//
-////                                    $('#exam1').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
-////                                    $('#exam2').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
-////                                    $('#lecture_ttbl_exam').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
-////                                    $('#exam_ttbl_exam').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
-//                                }
+        //                                if (lookup_flag) {
+        //                                    $('#exam').append($("<option></option>").attr("value", data[i]['id']).text(data[i]['exam_code']));
+        //                                }
+        //                                else  {
+        //
+        ////                                    $('#exam1').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
+        ////                                    $('#exam2').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
+        ////                                    $('#lecture_ttbl_exam').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
+        ////                                    $('#exam_ttbl_exam').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code']));
+        //                                }
                 }
             },
             "json"
@@ -582,7 +582,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
         );
     }
 
-function rpt_get_course_code(course_id, lookup_flag) {
+    function rpt_get_course_code(course_id, lookup_flag) {
 
         $('#rpt_mark_batch').find('option').remove().end().append('<option value="">---Select Batch---</option>').val('');
 
@@ -602,6 +602,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
             "json"
         );
     }
+
     function findObjectByKey(array, key, value) {
         for (var i = 0; i < array.length; i++) {
             if (array[i][key] === value) {
@@ -1698,6 +1699,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
                         function (data) {
                             //console.log('kasun :');
                           //  console.log(data);
+                          var FRLable='';
                             $('#exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
                                 for (var j = 0; j < data.length; j++) {
@@ -1778,14 +1780,18 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                             subjects_marks[di_subject_id] = exam_total + "<br>" + approval_btn;
                                         }
                                     }
-
+                                     //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
                                     $('#exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+hod_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+hod_style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#exam_marks_load_student'));
                                     applied_subjects = [];
                                     subjects_marks = {};
                                     hod_style_cell = [];
+                                    var FRLable='';
                                 }
                             $('.se-pre-con').fadeOut('slow');
                             } else {
@@ -1933,7 +1939,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
                         },
                         function (data) {
                             //console.log(data);
-
+                            var FRLable='';
                             $('#rpt_exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
 
@@ -1989,15 +1995,15 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                         //console.log(sbj_stat_array);
                                         var approval_btn = '<button id="mark_approval" title="' + tooltip + '"  ' + onchange_function + '   class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
 
-//                                        var pre_exammark = data[j]['exam_mark'][z]['total_marks'].split('.');
-//                                        var pre_exam_total = pre_exammark[1];
-//
-//                                        if(pre_exam_total == '00'){
-//                                            var exam_total = pre_exammark[0];
-//                                        }
-//                                        else{
-//                                            var exam_total = data[j]['exam_mark'][z]['total_marks'];
-//                                        }
+                                        //                                        var pre_exammark = data[j]['exam_mark'][z]['total_marks'].split('.');
+                                        //                                        var pre_exam_total = pre_exammark[1];
+                                        //
+                                        //                                        if(pre_exam_total == '00'){
+                                        //                                            var exam_total = pre_exammark[0];
+                                        //                                        }
+                                        //                                        else{
+                                        //                                            var exam_total = data[j]['exam_mark'][z]['total_marks'];
+                                        //                                        }
 
 
                                         var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
@@ -2013,10 +2019,10 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                             var exam_total = exammark_prec_ca;
                                         }
 
-//                                        if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-//                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-//                                        }
-//                                        else{
+                                        //                                        if(data[j]['exam_mark'][z]['is_repeat'] == 3){
+                                        //                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
+                                        //                                        }
+                                        //                                        else{
                                             subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "<br>" + approval_btn;
                                         //}
 
@@ -2024,7 +2030,10 @@ function rpt_get_course_code(course_id, lookup_flag) {
 
 
                                     //console.log(sbj_stat_array);
-
+                                     //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
                                     $('#rpt_exam_marks_tbl tr:last').append(sem_subject_ids
                                         .map(e => `<td style="`+hod_rpt_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
@@ -2032,7 +2041,8 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                     applied_subjects = [];
                                     subjects_marks = {};
                                     hod_rpt_style_cell = [];
-//
+                                    FRLable='';
+                                //
                                 }
                             $('.se-pre-con').fadeOut('slow');
                             } else {
@@ -2134,7 +2144,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
                         },
                         function (data) {
                             //console.log(data);
-
+                            var FRLable='';
                             $('#exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
 
@@ -2243,14 +2253,20 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                                       }
                                     }
 
+                                     //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
+
                                     //console.log(subjects_marks);
                                     $('#exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+dir_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+dir_style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#exam_marks_load_student'));
                                         applied_subjects = [];
                                         subjects_marks   = {};
                                         dir_style_cell   = [];
+                                        FRLable='';
                                         //
                                 }
                             $('.se-pre-con').fadeOut('slow');
@@ -2406,15 +2422,15 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                         var approval_btn = '<button id="mark_approval" title="' + tooltip + '"  ' + onchange_function + '   class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
 
                                         if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
-//                                            var pre_mrk = data[j]['exam_mark'][z]['total_marks'].split('.');
-//                                            var decivalue = pre_mrk[1];
-//
-//                                            if(decivalue == '00'){
-//                                               var subjectmrk = pre_mrk[0];
-//                                            }
-//                                            else{
-//                                                var subjectmrk = data[j]['exam_mark'][z]['total_marks'];
-//                                            }
+                                            //                                            var pre_mrk = data[j]['exam_mark'][z]['total_marks'].split('.');
+                                            //                                            var decivalue = pre_mrk[1];
+                                            //
+                                            //                                            if(decivalue == '00'){
+                                            //                                               var subjectmrk = pre_mrk[0];
+                                            //                                            }
+                                            //                                            else{
+                                            //                                                var subjectmrk = data[j]['exam_mark'][z]['total_marks'];
+                                            //                                            }
 
                                             var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
 
@@ -2429,10 +2445,10 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                                 var subjectmrk = exammark_prec_ca;
                                             }
 
-//                                            if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-//                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-//                                            }
-//                                            else{
+                                            //                                            if(data[j]['exam_mark'][z]['is_repeat'] == 3){
+                                            //                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
+                                            //                                            }
+                                            //                                            else{
                                                 subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjectmrk + "<br>" + approval_btn;
                                             //}
                                         } else {
@@ -2553,6 +2569,7 @@ function rpt_get_course_code(course_id, lookup_flag) {
                             //console.log(data);
 
                             $('#exam_marks_load_student').find('tr').remove();
+                            var FRLable='';
                             if (data.length > 0) {
 
 
@@ -2611,8 +2628,10 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                                     style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
                                                 }
 
-                                            }
 
+
+                                            }
+                                         
 
                                             var approval_btn = '<button id="mark_approval" title="' + tooltip + '" ' + onchange_function + ' class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
 
@@ -2667,14 +2686,22 @@ function rpt_get_course_code(course_id, lookup_flag) {
                                     }
 
                                     //console.log(subjects_marks);
+
+                                    //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
+                                    
+
                                     $('#exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 0, 0);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#exam_marks_load_student'));
                                     applied_subjects = [];
                                     subjects_marks = {};
                                     style_cell = [];
-//
+                                    FRLable='';
+
                                 }
                             $('.se-pre-con').fadeOut('slow');
 

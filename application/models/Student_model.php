@@ -1545,7 +1545,7 @@ class Student_model extends CI_Model
 
     function load_student_for_exam_marks_ca($data)
     {
-        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
+        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam_details esed', 'esed.semester_exam_id = ese.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = esed.student_id');
         $this->db->join('mod_subject co', 'co.id = esed.subject_id');
@@ -1607,7 +1607,7 @@ class Student_model extends CI_Model
 
     function load_student_for_exam_marks_se($data)
     {
-        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
+        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam_details esed', 'esed.semester_exam_id = ese.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = esed.student_id');
         $this->db->join('mod_subject co', 'co.id = esed.subject_id');
@@ -1738,7 +1738,7 @@ class Student_model extends CI_Model
 
     function load_student_for_exam_marks_approval_hod_ca($data)
     {
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam_details esed', 'esed.semester_exam_id = ese.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = esed.student_id');
         $this->db->join('mod_subject co', 'co.id = esed.subject_id');
@@ -1863,7 +1863,7 @@ class Student_model extends CI_Model
 
     function load_student_for_exam_marks_approval_dir_ca($data)
     {
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam_details esed', 'esed.semester_exam_id = ese.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = esed.student_id');
         $this->db->join('mod_subject co', 'co.id = esed.subject_id');
@@ -1989,10 +1989,12 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
 
     function load_student_for_exam_marks_approval_dir_se($data)
     {
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name ,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam_details esed', 'esed.semester_exam_id = ese.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = esed.student_id');
+       // $this->db->join('exam_fraud_students fr', 'sr.stu_id = fr.stu_id');
         $this->db->join('mod_subject co', 'co.id = esed.subject_id');
+        
       //  $this->db->join('exm_mark em', 'ese.id = em.sem_exam_id');
        // $this->db->join('exm_mark_details emd', 'em.id = emd.exam_mark_id');
 

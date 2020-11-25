@@ -165,7 +165,10 @@ foreach ($student_exam_mark_array as $va) {
     }
  
     for ($t = 0; $t < count($header_subj); $t++) {        
-        if(in_array($header_subj[$t], $body_subj)){                
+        if(in_array($header_subj[$t], $body_subj)){     
+            if($va['fraud_status']==1)           
+            $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">***</td>';
+            else
             $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">'.$subjects_marks[$header_subj[$t]].'</td>';
         }
         else{
@@ -177,10 +180,15 @@ foreach ($student_exam_mark_array as $va) {
         $subjects .= '<td align="center" style="width: '.$subject_col_width.'%;">Results not released.</td>';
     }
     else{
-        if($va['gpa']=='')
-        $subjects .= '<td align="center" style="width:5%">- </td>';
-        else
-        $subjects .= '<td align="center" style="width:5%">'.$va['gpa'].'</td>';
+
+        if($va['fraud_status']==1) {
+            $subjects .= '<td align="center" style="width:5%">***</td>';
+        }else{
+            if($va['gpa']=='')
+            $subjects .= '<td align="center" style="width:5%">- </td>';
+            else
+            $subjects .= '<td align="center" style="width:5%">'.$va['gpa'].'</td>';
+        }
     }
     
     

@@ -770,6 +770,9 @@ class Exam_model extends CI_Model
     function save_exam_marks($data,$flag)
     {
         $res = [];
+        $ishold = 0;
+        $fraud_id = 0;
+        $fraud_status = 0;
         
         if($flag)
         $this->db->trans_begin();
@@ -788,7 +791,12 @@ class Exam_model extends CI_Model
         } else {
             if ($mark_id == NULL) {
                 //insert
-                //insert to exm_exam_mark
+                //insert to exm_exam_mark fraud_status
+                if(isset($data['fraud_status'])){
+                    $fraud_status = $data['fraud_status'];
+                    $ishold = $data['ishold'];
+                    $fraud_id = $data['fraud_id'];
+                }
                 $insert_exam_mark = array(
                     'student_id' => $data['stu_id'],
                     'course_id' => $data['course_id'],
@@ -802,6 +810,9 @@ class Exam_model extends CI_Model
                     'grade_point' => $data['grade_point'],
                     'subject_credit' => $data['subject_point'],
                     'result' => $data['result_grade'], 
+                    'fraud_status' => $fraud_status, 
+                    'is_hold' => $ishold, 
+                    'fraud_id' => $fraud_id, 
                     'is_repeat_approve' => 0,
                     'is_repeat_mark' => 0,
                     'added_by' => $this->session->userdata('u_id'),
@@ -989,6 +1000,14 @@ class Exam_model extends CI_Model
     
     function update_mark_data($data, $mark_id, $sem_exam_id, $flag){
 
+        $ishold = 0;
+        $fraud_status = 0;
+        if(isset($data['fraud_status'])){
+            $fraud_status = $data['fraud_status'];
+            $ishold = $data['ishold'];
+           
+        }
+
         //update 
         //exm_exam_mark
         $update_exam_mark = array(
@@ -1004,6 +1023,8 @@ class Exam_model extends CI_Model
             'grade_point' => $data['grade_point'],
             'subject_credit' => $data['subject_point'],
             'result' => $data['result_grade'],
+            'fraud_status' => $fraud_status, 
+            'is_hold' => $ishold, 
             'updated_by' => $this->session->userdata('u_id'),
             'updated_on' => date("Y-m-d h:i:s", now())
         );
@@ -3511,4 +3532,32 @@ class Exam_model extends CI_Model
         
     }
     
+    function add_fraud_student($data){
+
+        $insert_id=0;
+        $this->db->select('*');
+        $this->db->where('stu_id', $data['stu_id']);
+        $this->db->where('subject_id', $data['subject_id']);
+        $row_array = $this->db->get('exam_fraud_students')->row_array();
+
+        if (!empty($row_array)) {
+            $insert_id=$row_array['fraud_id'];
+        } else {
+            $insert_data = array(
+                'course_id' =>$data['course_id'],
+                'year_no'=> $data['year_no'],
+                'semester_no' => $data['semester_no'],
+                'batch_id' => $data['batch_id'],
+                'sem_exam_id' => $data['sem_exam_id'],
+                'stu_id'=> $data['stu_id'],
+                'subject_id'=> $data['subject_id'],
+                'fraud_description'=> $data['fraud_description'],
+                'added_on' => date("Y-m-d h:i:s", now())
+            );
+            
+            $this->db->insert('exam_fraud_students', $insert_data);
+            $insert_id = $this->db->insert_id();
+        }
+        return  $insert_id;
+    }
 }

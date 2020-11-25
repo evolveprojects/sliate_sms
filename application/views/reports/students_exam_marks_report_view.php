@@ -1070,8 +1070,8 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
 
                                                             number_content = "<td align='center'>" + (j + 1) + "</td>";
                                                             action_content = "<td align='center'><a data-toggle='tooltip' title='View Print' class='btn btn-default btn-xs' onclick='event.preventDefault();staff_info_report_view(" + data[j]['stu_id'] + ")'><span class='glyphicon glyphicon-print' aria-hidden='true'></span></a> | \n\
-                <button data-toggle='tooltip' title='Approve' onclick='event.preventDefault();update_defined_exam_status(" + data[j]['exam_id'] + ", 1 )' class='btn btn-info btn-xs'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button> |\n\
-                <button data-toggle='tooltip' title='Reject' onclick='event.preventDefault();update_defined_exam_status(" + data[j]['id'] + ", 3 )' class='btn btn-warning btn-xs'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button></td>";
+                                                                 <button data-toggle='tooltip' title='Approve' onclick='event.preventDefault();update_defined_exam_status(" + data[j]['exam_id'] + ", 1 )' class='btn btn-info btn-xs'><span class='glyphicon glyphicon-ok' aria-hidden='true'></span></button> |\n\
+                                                                    <button data-toggle='tooltip' title='Reject' onclick='event.preventDefault();update_defined_exam_status(" + data[j]['id'] + ", 3 )' class='btn btn-warning btn-xs'><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button></td>";
                                                             $('#student_exam_marks_tbl').DataTable().row.add([
                                                                 number_content,
                                                                 data[j]['reg_no'],
@@ -1079,7 +1079,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                 data[j]['year_no'],
                                                                 data[j]['semester_no'],
                                                                 code
-//                                    data[j]['code'] + " - " + data[j]['total_marks'] + " - " + data[j]['overall_grade']
+                                                    //                                    data[j]['code'] + " - " + data[j]['total_marks'] + " - " + data[j]['overall_grade']
 
 
 
@@ -1102,13 +1102,13 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                             }
 
                             function load_student_data() {
-                            $('.se-pre-con').fadeIn('slow');
-//                            var center_id   = $('#l_center').val();
-//                            var course_id   = $('#l_Dcode').val();
-//                            var batch_id    = $('#l_Bcode').val();
-//                            var year_no     = $('#l_no_year').val();
-//                            var semester_no = $('#l_no_semester').val();
-//    
+                                $('.se-pre-con').fadeIn('slow');
+                                //                            var center_id   = $('#l_center').val();
+                                //                            var course_id   = $('#l_Dcode').val();
+                                //                            var batch_id    = $('#l_Bcode').val();
+                                //                            var year_no     = $('#l_no_year').val();
+                                //                            var semester_no = $('#l_no_semester').val();
+                                //    
 
                                 var res = [];
                                 var sem_subject_ids = [];
@@ -1191,6 +1191,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                             $("#exam_marks_tbl").find('tbody').empty();
                                                             
                                                             $('#load_thead').find('tr').remove();
+                                                            var FRLable='';
                                                             if (data['students'].length > 0) {
 
                                                                 $('#exam_marks_tbl').DataTable().rows().remove();
@@ -1210,10 +1211,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                     for (x = 0; x < data['students'][j]['applied_subjects'].length; x++) {
                                                                         applied_subjects.push(data['students'][j]['applied_subjects'][x]['subject_code']);
                                                                         
-//                                                                        if (data[j]['applied_subjects'][x]['is_approved'] >2)//is_approved
-//                                                                           applied_subjects.push(data[j]['applied_subjects'][x]['subject_code'])= "any";
-//                                                                        else //if (data[j]['applied_subjects'][x]['is_approved'] == 2)
-//                                                                            subjects_marks[data[j]['applied_subjects'][x]['subject_code']] = "Mark not Entered";
+                                                                        //                                                                        if (data[j]['applied_subjects'][x]['is_approved'] >2)//is_approved
+                                                                        //                                                                           applied_subjects.push(data[j]['applied_subjects'][x]['subject_code'])= "any";
+                                                                        //                                                                        else //if (data[j]['applied_subjects'][x]['is_approved'] == 2)
+                                                                        //                                                                            subjects_marks[data[j]['applied_subjects'][x]['subject_code']] = "Mark not Entered";
 
                                                                     }
                                                                     
@@ -1242,9 +1243,9 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                                } else if(data['students'][j]['exam_mark'][z]['is_ex_director_mark_approved'] == 1){
                                                                                    // done SE process
                                                                                    //console.info('ex dir app 1')
-    //                                                                                if(data['students'][j]['exam_mark'][z]['overall_grade'] == 'AB'){
-    //                                                                                    mark = 'AB';
-    //                                                                                } else {
+                                                                                    //                                                                                if(data['students'][j]['exam_mark'][z]['overall_grade'] == 'AB'){
+                                                                                    //                                                                                    mark = 'AB';
+                                                                                    //                                                                                } else {
                                                                                         if(data['students'][j]['exam_mark'][z]['result'] === '-'){
                                                                                             // if the student is absent
                                                                                             if(examData['is_absent'] == '1'){
@@ -1264,7 +1265,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                                         } else {
                                                                                             mark = data['students'][j]['exam_mark'][z]['result'];
                                                                                         }
-    //                                                                                }
+                                                                            //         }
                                                                             //done only CA process
                                                                             } else if(data['students'][j]['exam_mark'][z]['is_hod_mark_aproved'] == 1 && data['students'][j]['exam_mark'][z]['is_director_mark_approved'] == 1 && data['students'][j]['exam_mark'][z]['is_ex_director_mark_approved'] == 0){
                                                                                  mark = "I(SE)";        
@@ -1280,11 +1281,14 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                         
                                                                         subjects_marks[data['students'][j]['exam_mark'][z]['subject_code']] = mark;
                                                                     }
-
+                                                                     //fraud student display
+                                                                    if(data['students'][j]['fraud_status']==1){
+                                                                        FRLable='background-color:red;';
+                                                                    }
                                                                     $('#exam_marks_tbl').css("height", "200px");
-                                                                    $('#exam_marks_tbl').css("overflow-y", "scroll");
+                                                                    $('#exam_marks_tbl').css("overflow-y", "scroll");//align="center"
                                                                     $('#exam_marks_tbl tr:last').append(sem_subject_code
-                                                                            .map(e => `<td align="center">${stu_sem_applied_subjects.includes(e) ? (applied_subjects.includes(e) ? '<a id="' + data['students'][j]['stu_id'] + '_subject_mark_' + e + '" ><span>' + subjects_marks[e] +'</span></a>' : "INC") : " "}</td>`)
+                                                                            .map(e => `<td  style="text-align: center;`+FRLable+`">${stu_sem_applied_subjects.includes(e) ? (applied_subjects.includes(e) ? '<a id="' + data['students'][j]['stu_id'] + '_subject_mark_' + e + '" ><span>' + subjects_marks[e] +'</span></a>' : "INC") : " "}</td>`)
                                                                             .join(''))
                                                                             .appendTo($('#load_student'));
                                                                     
@@ -1309,12 +1313,14 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                                                         }
                                                                     }
                                                                     
-                                                                    $('#exam_marks_tbl tr:last').append('<td align="center">'+gpa+'</td>').appendTo($('#load_student'));
-//                                                                    $('#student_gpa').val(data[j]['overall_gpa']);
+                                                                    
+                                                                    $('#exam_marks_tbl tr:last').append('<td style="text-align: center;'+FRLable+'">'+gpa+'</td>').appendTo($('#load_student'));
+                                                                    //  $('#student_gpa').val(data[j]['overall_gpa']);
                                                                     applied_subjects = [];
                                                                     stu_sem_applied_subjects = [];
                                                                     subjects_marks = {};
-//
+                                                                    FRLable='';
+                                                               //
                                                                 }
                                                                 $('#print_students_semester_subject_btn').attr("disabled", false);
 
@@ -1327,10 +1333,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
 
                                                                         $('#load_student').find('tr').remove();
                                                                         $('#load_thead').append("<tr><th>#</th><th>Reg No</th><th>Admision No</th><th>Student</th></tr>");
-        //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
-        //                                                                    .map(id => `<th>${id}</th>`)
-        //                                                                    .join(''))
-        //                                                                    .appendTo($('#load_thead'));
+                                                                        //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
+                                                                        //                                                                    .map(id => `<th>${id}</th>`)
+                                                                        //                                                                    .join(''))
+                                                                        //                                                                    .appendTo($('#load_thead'));
                                                                         $('#exam_marks_tbl tr:last').append(
                                                                             '<th>Subject</th><th>SGPA</th>')
                                                                             .appendTo($('#load_thead'));
@@ -1360,10 +1366,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
 
                                                                         $('#load_student').find('tr').remove();
                                                                         $('#load_thead').append("<tr><th>#</th><th>Reg No</th><th>Admision No</th><th>Student</th></tr>");
-        //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
-        //                                                                    .map(id => `<th>${id}</th>`)
-        //                                                                    .join(''))
-        //                                                                    .appendTo($('#load_thead'));
+                                                                        //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
+                                                                        //                                                                    .map(id => `<th>${id}</th>`)
+                                                                        //                                                                    .join(''))
+                                                                        //                                                                    .appendTo($('#load_thead'));
                                                                         $('#exam_marks_tbl tr:last').append(
                                                                             '<th>Subject</th><th>SGPA</th>')
                                                                             .appendTo($('#load_thead'));
@@ -1376,10 +1382,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
 
                                                                     $('#load_student').find('tr').remove();
                                                                     $('#load_thead').append("<tr><th>#</th><th>Reg No</th><th>Admision No</th><th>Student</th></tr>");
-    //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
-    //                                                                    .map(id => `<th>${id}</th>`)
-    //                                                                    .join(''))
-    //                                                                    .appendTo($('#load_thead'));
+                                                                    //                                                                $('#exam_marks_tbl tr:last').append(sem_subject_code
+                                                                    //                                                                    .map(id => `<th>${id}</th>`)
+                                                                    //                                                                    .join(''))
+                                                                    //                                                                    .appendTo($('#load_thead'));
                                                                     $('#exam_marks_tbl tr:last').append(
                                                                         '<th>Subject</th><th>SGPA</th>')
                                                                         .appendTo($('#load_thead'));
@@ -1612,9 +1618,9 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
         var center_id   = $('#rpt_prom_centre').val();
         
         
-//        if($('#rpt_mark_year').val() != ""){
-//            year = $('#rpt_mark_year').val().split('-')[0].trim();
-//        }
+        //        if($('#rpt_mark_year').val() != ""){
+        //            year = $('#rpt_mark_year').val().split('-')[0].trim();
+        //        }
 
         if (batch_id == '' || course_id == '' || year == '' || semester == '') {
             res['status'] = 'denied';
@@ -1773,7 +1779,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
     
     function prnt_load_repeat_student_data_report(){
         
-//        var year = "";
+            //        var year = "";
         var batch_id    = $('#rpt_mark_batch').val();
         var course_id   = $('#rpt_mark_course').val();
         
@@ -2233,25 +2239,25 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                         sgpa = data['mark_details'][i]['stu_data']['gpa'];
                     }
                     
-//                    //cgpa
-//                    cgpa = data[i]['stu_data']['cgpa'];
-//                    
-//                    if(cgpa == null){
-//                        cgpa = "  --";
-//                    }else if(cgpa == ""){
-//                        cgpa = "  --";
-//                    }
-//                    else{
-//                        cgpa = data[i]['stu_data']['cgpa'];
-//                    }
-//                    
-//                    $('#cumulativegpa').text("Overall GPA-: "+cgpa);
-                    
-//                    $('#view_full_results_tbl').DataTable().row.add([ 
-//                        '1',
-//                        "<b>Cumulative GPA -: "+cgpa+"</b>",
-//                        ''
-//                    ]).draw(false);  
+                    //                    //cgpa
+                    //                    cgpa = data[i]['stu_data']['cgpa'];
+                    //                    
+                    //                    if(cgpa == null){
+                    //                        cgpa = "  --";
+                    //                    }else if(cgpa == ""){
+                    //                        cgpa = "  --";
+                    //                    }
+                    //                    else{
+                    //                        cgpa = data[i]['stu_data']['cgpa'];
+                    //                    }
+                    //                    
+                    //                    $('#cumulativegpa').text("Overall GPA-: "+cgpa);
+                                        
+                    //                    $('#view_full_results_tbl').DataTable().row.add([ 
+                    //                        '1',
+                    //                        "<b>Cumulative GPA -: "+cgpa+"</b>",
+                    //                        ''
+                    //                    ]).draw(false);  
                     
 
                     if(i > 0){
