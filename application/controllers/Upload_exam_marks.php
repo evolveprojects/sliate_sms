@@ -57,6 +57,7 @@ class Upload_exam_marks extends CI_Controller
             $subject_mark = [];
             $ca_type_in_db = 0;
             $ca_percentage_in_db = 0;
+            $exam_NE=false;
 
             $excelRows = $this->input->post('excelRows');
             $data['batch_id'] = $this->input->post('batch_id');
@@ -74,6 +75,8 @@ class Upload_exam_marks extends CI_Controller
                 $is_fraud =0;
                 $fraud_id =0;
                 $is_hold =0;
+                $exam_NE=false;
+
                 $absent_reson_approve=0;
                 if ( (!empty($row['SubjectName'])) && (!empty($row['StudentRegNo'])) && (!empty($row['ExamType']))) {
                     $data['StudentRegNo'] = $row['StudentRegNo'];
@@ -140,6 +143,8 @@ class Upload_exam_marks extends CI_Controller
                                 }elseif($data['Remarks']=='DFR'){
                                     $is_attend =0;
                                     $absent_reson_approve=1;
+                                }elseif($data['Remarks']=='NE'){
+                                    $exam_NE=true;
                                 }elseif($data['Remarks']=='FR'){
 
                                     $is_attend =1;
@@ -176,10 +181,16 @@ class Upload_exam_marks extends CI_Controller
                                         $persentage[0] = $ca_percentage;
                                         $subject_mark[0] = $ca_mark;
 
+                                        if($exam_NE){
+                                            $overall_grade='NE';
+                                            $grade_point=  0;
+                                            $result_grade=  'NE';
+                                           
+                                        }else{
                                         $overall_grade=  $this->subjectgrade->overall_grade($markingDetail['grading_method_id'],$totalmarks,false);//$grade_method__id, $mark, $is_rate
                                         $grade_point=  $this->subjectgrade->overall_grade($markingDetail['grading_method_id'],$totalmarks,true);
                                         $result_grade=  $this->subjectgrade->result_grades($is_attend,$absent_reson_approve,0,$ca_mark,$totalmarks);//$is_attend,$absent_reson_approve,$se_mark,$ca_mark,$tot
-                                        
+                                        }
                                         try {
                                             $saveData['stu_id'] = $student_id;
                                             $saveData['subject_id'] = $subject_id;
@@ -269,11 +280,16 @@ class Upload_exam_marks extends CI_Controller
 
                                             $totalmarks = (($se_mark_for_total/100) * $se_percentage) + ($ca_percentage_in_db * ($ca_mark_for/100));
 
-
+                                            if($exam_NE){
+                                                $overall_grade='NE';
+                                                $grade_point=  0;
+                                                $result_grade=  'NE';
+                                               
+                                            }else{
                                             $overall_grade=  $this->subjectgrade->overall_grade($markingDetail['grading_method_id'],$totalmarks,false);//$grade_method__id, $mark, $is_rate
                                             $grade_point=  $this->subjectgrade->overall_grade($markingDetail['grading_method_id'],$totalmarks,true);
                                             $result_grade=  $this->subjectgrade->result_grades($is_attend,$absent_reson_approve,$se_mark_for_total,$ca_mark_for_total,$totalmarks);//$is_attend,$absent_reson_approve,$se_mark,$ca_mark,$tot
-                                         
+                                            }
 
                                             try {
                                                 $saveData['stu_id'] = $student_id;
