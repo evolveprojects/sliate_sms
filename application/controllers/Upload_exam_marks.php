@@ -374,7 +374,7 @@ class Upload_exam_marks extends CI_Controller
         }
 //        $data['student_registration_number'] = $this->input->post('student_registration_number');
 //        $data['subject_code'] = $this->input->post('subject_code');
-        return json_encode($res);
+        echo json_encode($res);
 
     }
 }

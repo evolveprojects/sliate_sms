@@ -4862,7 +4862,7 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->where('em.year_no', $data['year_no']);
             $this->db->where('em.semester_no', $data['semester_no']);
             $this->db->where('em.student_id', $result_array['students'][$i]['stu_id']);
-            $result_array['students'][$i]['exam_mark'] = $this->db->get('exam_applied_sudents_marks_view em')->result_array();
+            $result_array['students'][$i]['exam_mark'] = $this->db->get('exam_applied_sudents_marks_vie em')->result_array();
         }
         return $result_array;
     }

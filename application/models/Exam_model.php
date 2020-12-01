@@ -1851,7 +1851,7 @@ class Exam_model extends CI_Model
         $this->db->where('em.course_id', $rcourse);
         $this->db->where('em.year_no', $ryear);
         $this->db->where('em.semester_no', $rsemester);
-    //    $this->db->where('em.batch_id', $rbatch);
+        //    $this->db->where('em.batch_id', $rbatch);
         $this->db->where('em.sem_exam_id', $rexam);
         $this->db->where('sr.center_id', $rcenter);
         $this->db->where_in('em.result', array('C-','D+','D','E', 'DFR','I(SE)','I(CA)','INC','AB','N/E','Fail'));
@@ -1862,19 +1862,20 @@ class Exam_model extends CI_Model
             $this->db->where('sr.stu_id', $this->session->userdata('user_ref_id'));
         }
         $this->db->where('NOT(EXISTS(select stu_id from exm_semester_exam_details_repeat where stu_id = `em`.`student_id` and deleted = 0 and subject_id = em.subject_id and applying_batch = '.$rbatch.' and applying_year = '.$ryear.' and applying_semester = '.$rsemester.' and applying_exam = '.$rexam.'))');
-       // $this->db->where('NOT(EXISTS(select student_id from exm_semester_exam_details where student_id = em.student_id and is_repeat = 1))');
-       // $this->db->where('NOT(EXISTS(select stu_id from exm_semester_exam_details_repeat where stu_id = em.student_id and deleted = 0))');
+        // $this->db->where('NOT(EXISTS(select student_id from exm_semester_exam_details where student_id = em.student_id and is_repeat = 1))');
+        // $this->db->where('NOT(EXISTS(select stu_id from exm_semester_exam_details_repeat where stu_id = em.student_id and deleted = 0))');
         //$this->db->where('NOT(EXISTS(select student_id from exm_semester_exam_details where student_id = `em`.`student_id` and subject_id = em.subject_id and (is_repeat = 1 or is_repeat = 3)))');      
         //$this->db->where('IF(em.result = "AB", EXISTS(select student_id from exm_semester_exam_details where student_id = em.student_id and (is_absent = 1 and is_absent_approve = 0 or is_absent = 0) and subject_id = em.subject_id), null)');
         $this->db->group_by('em.student_id');
         $exams = $this->db->get('exm_mark em')->result_array();
 
-//===============================load semester subjects ======================================
+        //===============================load semester subjects ======================================
         $data['batch_id'] = $this->input->post('rptBatch');
         $data['year_no'] = $this->input->post('rptYear');
         $data['semester_no'] = $this->input->post('rptSemester');
         $data['course_id'] = $this->input->post('rptCourse');
         $temp= $this->Subject_model->semester_subjects_by_semester($data);
+       // print_r($temp);
           
         for ($j = 0; $j < (count($temp)-1); $j++) {
             $this->db->select('is_training_apply, id');
@@ -1884,8 +1885,8 @@ class Exam_model extends CI_Model
             if($subject_apply_data['is_training_apply'] == 1){
                 $temp[$j]['marking_details'] = $this->get_relevent_training_marking_details($data['course_id'], $data['year_no'], $data['semester_no'], $data['batch_id'], $temp[$j]['subject_id']);
             }
-            else{
-                $temp[$j]['marking_details'] = $this->Student_model->get_relevent_marking_details($data['course_id'], $data['year_no'], $data['semester_no'], $data['batch_id'], $temp[$j]['subject_id']);
+            else{                                                                                 
+                $temp[$j]['marking_details'] = $this->Student_model->get_relevent_marking_details($data['course_id'], $data['year_no'], $data['semester_no'], $data['batch_id'], $temp[$j]['subject_id'],$temp[$j]['type']);// 1 is se exam type id
             }
 
         }
