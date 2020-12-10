@@ -2167,13 +2167,22 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
         $subject_id = $data['subject_id'];
 
         $this->db->select('*, co.type as subject_type, co.code as subject_code');
+        if($data['repeat'] == 1)
+        $this->db->join('exm_semester_exam_details_repeat sed', 'se.exam_id = sed.semester_exam_id');
+        else
         $this->db->join('exm_semester_exam_details sed', 'se.id = sed.semester_exam_id');
+
         $this->db->join('mod_subject co', 'co.id = sed.subject_id');
         $this->db->where('se.exam_id', $current_stu_exam);
         $this->db->where('se.course_id', $data['course_id']);
         $this->db->where('se.year_no', $data['year_no']);
         $this->db->where('se.semester_no', $data['semester_no']);
+
+        if($data['repeat'] == 1)
+        $this->db->where('sed.stu_id', $data['stu_id']);
+        else
         $this->db->where('sed.student_id', $data['stu_id']);
+
         $this->db->where('sed.subject_id', $subject_id);
         $this->db->where('se.deleted', 0);
         $result_array['subject_details'] = $this->db->get('exm_semester_exam se')->row_array();
@@ -2275,6 +2284,10 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
 //        $this->db->where('em.sem_exam_id', $result_array['subject_details']['semester_exam_id']);
         $this->db->where('em.deleted', 0);
         $this->db->where('ed.deleted', 0);
+        if($data['repeat'] == 1)
+        $this->db->where('em.is_repeat_mark', 1);
+
+        $this->db->order_by('ed.id', 'DESC');
         $result_array['exam_mark'] = $this->db->get('exm_mark em')->result_array();
 
 
@@ -3892,6 +3905,27 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
                 $this->db->where('ed.deleted', 0);
                 $this->db->where('sedr.deleted', 0);
                 $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();
+
+                /// load repeate students
+                $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
+                em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
+                ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');
+                $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
+                $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
+                $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
+                $this->db->join('mod_subject co', 'co.id = em.subject_id');
+                $this->db->where('em.course_id', $data['course_id']);
+                //$this->db->where('em.batch_id', $data['batch_id']);
+                //$this->db->where('em.batch_id', $rbatch);
+                $this->db->where('em.year_no', $data['year_no']);
+                $this->db->where('em.semester_no', $data['semester_no']);
+                $this->db->where('em.student_id', $result_array[$i]['stu_id']);
+                $this->db->where('co.is_training_apply', 0);
+                $this->db->where('em.deleted', 0);
+                $this->db->where('ed.deleted', 0);
+                $this->db->where('sedr.deleted', 0);
+                $this->db->where('em.is_repeat_mark', 1);
+                $result_array[$i]['rpt_exam_mark'] = $this->db->get('exm_mark em')->result_array(); 
             }
         }
 //        print_r($result_array);
@@ -3977,6 +4011,30 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
                 $this->db->where('ed.deleted', 0);
                 $this->db->where('sedr.deleted', 0);
                 $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();     
+
+                 /// load repeate students
+                 $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
+                 em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
+                 ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');
+                 $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
+                 $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
+                 $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
+                 $this->db->join('mod_subject co', 'co.id = em.subject_id');
+                 $this->db->where('em.course_id', $data['course_id']);
+                 //$this->db->where('em.batch_id', $data['batch_id']);
+                 //$this->db->where('em.batch_id', $rbatch);
+                 $this->db->where('em.year_no', $data['year_no']);
+                 $this->db->where('em.semester_no', $data['semester_no']);
+                 $this->db->where('em.student_id', $result_array[$i]['stu_id']);
+                 $this->db->where('co.is_training_apply', 0);
+                 $this->db->where('em.deleted', 0);
+                 $this->db->where('ed.deleted', 0);
+                 $this->db->where('sedr.deleted', 0);
+                 $this->db->where('em.is_repeat_mark', 1);
+                 $result_array[$i]['rpt_exam_mark'] = $this->db->get('exm_mark em')->result_array(); 
+
+
+
                 
                 for ($y = 0; $y < count($result_array[$i]['exam_mark']); $y++) {
                     $data['subject_id'] = $result_array[$i]['exam_mark'][$y]['subject_id'];

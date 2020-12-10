@@ -541,6 +541,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
         $('#exam').find('option').remove().end().append('<option value="">-----Select Exam-----</option>').val('');
         $.post("<?php echo base_url('exam/load_semester_exam') ?>", {'batch_id': batch_id},
             function (data) {
+                //console.log(data);
                 for (var i = 0; i < data.length; i++) {
 
                     $('#exam').append($("<option></option>").attr("value", data[i]['exam_id']).text(data[i]['exam_code']+" - "+data[i]['exam_name']));
@@ -678,9 +679,9 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             // var text_id=this.id;
                               inp_perc = $('#pers_' + temp[1] + '_' + temp[2]).val();
 
-                        console.log(obj);//kasun
-                        console.log(this.id);//kasun
-                        console.log(temp);//kasun
+                      //  console.log(obj);//kasun
+                      //  console.log(this.id);//kasun
+                      //  console.log(temp);//kasun
 
                         if(typeof temp[2] !='undefined'){
                             if(temp[2]==1){
@@ -731,10 +732,10 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                totalmarks = ((parseFloat(se_mark_for_total) * (1 - inp_perc / 100)) + (parseFloat(ca_mark_for_total) * (inp_perc / 100))).toFixed(2);
 
 
-                                console.log('aa tot :'+totalmarks);
-                                console.log('aa inp :'+inp_perc);
-                                console.log('aa ca:'+ca_mark_for_total);
-                                console.log('aa se :'+se_mark_for_total);
+                               // console.log('aa tot :'+totalmarks);
+                             //   console.log('aa inp :'+inp_perc);
+                              //  console.log('aa ca:'+ca_mark_for_total);
+                              //  console.log('aa se :'+se_mark_for_total);
 
                                 if(repeat_status == 1){
                                     for(x=0; x<data.length; x++){
@@ -1371,7 +1372,9 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                     'repeat': repeat
                 },
                 function (data) {
+                   // console.log(data);
                     //debugger;
+                    
                     result_grade = '-';
                     switch (data['user_level']) {
                         case "1":
@@ -1413,7 +1416,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             $('#repeat_status_id').val('1');
                         }
                     }
-
+                    
                     if(repeat_status == 1){
                         $(".modal_title").text("Exam Marks : Course: " + data['subject_details']['repeat_details'][0]['course_code'] + "- Batch : " + data['subject_details']['repeat_details'][0]['batch_code'] + "  Y" + year + "/ S" + semester);
                         jQuery("label[for='student_name']").html(data['subject_details']['repeat_details'][0]['first_name']);
@@ -1430,12 +1433,14 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
 
 
                     var grading_method_id = '';
+                    var subject_mark = '';
                     for (var j = 0; j < data['subject_details']['marking_details'].length; j++) {
 
                         //debugger;
 
                         var readonly_text = '';
                         var absent_chk = '';
+                        subject_mark = '';
                         grading_method_id = data['subject_details']['marking_details'][j]['grading_method_id'];
 
                         //----Assignment ONLY Subject----
@@ -1447,7 +1452,21 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                         }
 
                         var change_function = '';
+                        var mark_value = '';
+
+
+                       
+
+                        
                         if (data['subject_details']['marking_details'][j]['type_id'] == 1) {
+
+                            if (data['exam_mark'].length > 0) {
+                                var exam_mark_index=0;
+                                exam_mark_index= data['exam_mark'].findIndex(x => x.exam_type_id ==="1");
+                            }
+                          //  console.log(exam_mark_index+"type 1");
+                          // alert(exam_mark_index);
+
                             readonly_text = write_mark;
                             change_function = false;
                             if (data['exam_mark'].length != 0)
@@ -1474,12 +1493,13 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             }
                         } else if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
 
-
                             if (data['exam_mark'].length > 0) {
                                 var exam_mark_index=0;
                                 exam_mark_index= data['exam_mark'].findIndex(x => x.exam_type_id ==="2");
                             }
-                           // console.log(exam_mark_index);
+                           // console.log(exam_mark_index+"type 2");
+                            //alert(exam_mark_index);
+                          
 
                             readonly_text = Assignment_mark;
                             change_function = true;
@@ -1579,67 +1599,96 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                 }
                             }
 
-                        //debugger;
+                            
 
-                        if (data['exam_mark'][exam_mark_index]) {
-                            if (data['exam_mark'][exam_mark_index]['mark'] === null || data['exam_mark'][exam_mark_index]['mark'] === '') { // when absent mark is null
-                                var subject_mark = '';
-                            } else {
-                                var pre_mark = data['exam_mark'][exam_mark_index]['mark'].split('.');
-                                var decimalvalue = pre_mark[1];
+                            
 
-                                if(decimalvalue == '00'){
-                                   var subject_mark = pre_mark[0];
-                                }
-                                else{
-                                    var subject_mark = data['exam_mark'][exam_mark_index]['mark'];
-                                }
-                            }
+                       
+
+
+
+
                         } else {
-                            var subject_mark = '';
+                            readonly_text = "readonly='readonly'";
+                            change_function = '';
                         }
 
-                        //debugger;
 
-                        if (user_level == 'ca_mark') {
-                            if(data['exam_mark'].length > 0) {
-                                if(data['exam_mark'][exam_mark_index]['exam_type_id'] == 1){
-                                    var mark_value = "<input type='hidden' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
-                                }
-                                else {
-                                    if(repeat_status == 1){
-                                        if(assignment_only == 1 ){
-                                            readonly_text = "";
-                                        }
-                                        var mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['repeat_details'][0]['is_attend']+","+data['subject_details']['repeat_details'][0]['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+
+                       // console.log("Kasun : "+" id :"+exam_mark_index );
+                         //debugger;
+                         console.log("Kasun : "+" id :"+exam_mark_index +"/");
+                       //  exam_mark_index=0;
+
+                         if(exam_mark_index==-1)
+                         continue;
+                            if (data['exam_mark'][exam_mark_index]) {
+                                if (data['exam_mark'][exam_mark_index]['mark'] === null || data['exam_mark'][exam_mark_index]['mark'] === '') { // when absent mark is null
+                                     subject_mark = '';
+                                } else {
+                                    var pre_mark = data['exam_mark'][exam_mark_index]['mark'].split('.');
+                                    var decimalvalue = pre_mark[1];
+
+                                    if(decimalvalue == '00'){
+                                     subject_mark = pre_mark[0];
                                     }
                                     else{
-                                        var mark_value = "<input type='text' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status + ","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+                                         subject_mark = data['exam_mark'][exam_mark_index]['mark'];
+                                    }
+                                }
+                            } else {
+                                var subject_mark = '';
+                            }
+                                    //debugger;
+                                   //console.log("Kasun : "+" id :"+exam_mark_index +"/");
+                                  
+
+                            if (user_level == 'ca_mark') {
+                                if(data['exam_mark'].length > 0) {
+                                    if(data['exam_mark'][exam_mark_index]['exam_type_id'] == 1){
+                                        if(repeat_status==1)
+                                         mark_value = "<input type='hidden' name='subject_mark[]'  value='0' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
+                                        else
+                                         mark_value = "<input type='hidden' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
+                                    }
+                                    else {
+                                        if(repeat_status == 1){
+                                            if(assignment_only == 1 ){
+                                                readonly_text = "";
+                                            }
+                                             mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['repeat_details'][0]['is_attend']+","+data['subject_details']['repeat_details'][0]['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+                                        }
+                                        else{
+                                             mark_value = "<input type='text' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status + ","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(data['subject_details']['marking_details'][j]['type_id'] == 1){
+                                         mark_value = "<input type='hidden' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
+                                    }
+                                    else{
+                                         mark_value = "<input type='text' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+
                                     }
                                 }
                             }
                             else{
-                                if(data['subject_details']['marking_details'][j]['type_id'] == 1){
-                                    var mark_value = "<input type='hidden' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " />";
+                                if(repeat_status == 1){
+                                     mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['repeat_details'][0]['is_attend']+","+data['subject_details']['repeat_details'][0]['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+                                    calculate_total(subject_mark,data['subject_details']['repeat_details'][0]['is_attend'],data['subject_details']['repeat_details'][0]['is_absent_approve'],data['subject_details']['marking_details'][j]['grading_method_id'], data['subject_details']['subject_id'] ,  change_function ,repeat_status, assignment_only );
                                 }
                                 else{
-                                    var mark_value = "<input type='text' name='subject_mark[]'  value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
-
+                                     mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
+                                    calculate_total(subject_mark,data['subject_details']['is_attend'],data['subject_details']['is_absent_approve'],data['subject_details']['marking_details'][j]['grading_method_id'], data['subject_details']['subject_id'] ,  change_function ,repeat_status, assignment_only );
                                 }
                             }
-                        }
-                        else{
-                            if(repeat_status == 1){
-                                var mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['repeat_details'][0]['is_attend']+","+data['subject_details']['repeat_details'][0]['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
-                                calculate_total(subject_mark,data['subject_details']['repeat_details'][0]['is_attend'],data['subject_details']['repeat_details'][0]['is_absent_approve'],data['subject_details']['marking_details'][j]['grading_method_id'], data['subject_details']['subject_id'] ,  change_function ,repeat_status, assignment_only );
-                            }
-                            else{
-                                var mark_value = "<input type='text' name='subject_mark[]' value='"+subject_mark+"' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='ca_mark_txt form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value,"+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ","+ repeat_status +","+assignment_only+");'  " + readonly_text + " /><b>(Marks out of 100)</b>";
-                                calculate_total(subject_mark,data['subject_details']['is_attend'],data['subject_details']['is_absent_approve'],data['subject_details']['marking_details'][j]['grading_method_id'], data['subject_details']['subject_id'] ,  change_function ,repeat_status, assignment_only );
-                            }
-                        }
 
-                        //Set exam type and percentage
+
+
+
+
+                             //Set exam type and percentage
                         var exam_type;
 
 
@@ -1652,18 +1701,9 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             exam_type = "Written";
                             percentage_index=data['subject_details']['marking_details'].findIndex(x => x.type_id ==="1");
                         }
-                        $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
+                        $("#mark_data_tbl").append("<tr ><td>" + (j + 1) + "</td><td>" + exam_type + "</td><td>" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][percentage_index]['percentage'] + "'>"+mark_value+"</div>"+absent_chk+"</td></tr>");
 
-
-
-
-
-                        } else {
-                            readonly_text = "readonly='readonly'";
-                            change_function = '';
-                        }
-
-
+                       // console.log(data['subject_details']['marking_details'][j]['type_id']+" and : "+user_level);
 
                     }
 
@@ -1682,8 +1722,11 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                         }
 
                         if (user_level == 'ca_mark'){
+                            var total_marks=0;
+                            
+                             data['exam_mark'].forEach(element => total_marks=element['total_marks']);
 
-                            var totmark_prec_ca = ((data['exam_mark'][data['exam_mark'].length-1]['mark']) * ((data['exam_mark'][data['exam_mark'].length-1]['persentage'])/100)).toFixed(2);
+                           /* var totmark_prec_ca = ((data['exam_mark'][data['exam_mark'].length-1]['mark']) * ((data['exam_mark'][data['exam_mark'].length-1]['persentage'])/100)).toFixed(2);
                             var pre_totmark_ca = totmark_prec_ca.split('.');
                             var pre_mark_total_ca = pre_totmark_ca[1];
                             console.log(totmark_prec_ca);
@@ -1695,7 +1738,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             }
                             else{
                                 var total_marks = totmark_prec_ca;
-                            }
+                            }*/
                         }
 
                         var overall_grade = data['exam_mark'][0]['overall_grade'];
@@ -1707,7 +1750,9 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             var subject_point = data['subject_details']['credits'];
                         }
                         var grade_point = data['exam_mark'][0]['grade_point'];
+                       
                     } else {
+                      
                         var total_marks = '';
                         var overall_grade = '';
                         var result_grade = '';
@@ -1727,7 +1772,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                     }
 
                     if(repeat_status == 1){
-                        if (user_level=='se_mark'&& data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
+                        if (user_level=='se_mark' && data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
                             total_marks = 0;
                             overall_grade = 'AB';
                             result_grade = 'AB';
@@ -1767,6 +1812,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                 calculate_total(subject_mark,data['subject_details']['is_attend'],data['subject_details']['is_absent_approve'],data['subject_details']['marking_details'][0]['grading_method_id'], data['subject_details']['subject_id'],true,repeat_status,assignment_only);
                         }
                     }
+                   
 
                    if (user_level == 'ca_mark') {//kasun
                        var se_result_div = "<div class='col-xs-4'  style='display: block;'> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-4' style='display:block;'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div>";
@@ -1913,24 +1959,24 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                     }
 
 
-                                    for (z = 0; z < data[j]['exam_mark'].length; z++) {
-
+                                    for (z = 0; z < data[j]['rpt_exam_mark'].length; z++) {
+                                          //  continue;
                                        //SE mark
-                                        var pre_exammark = data[j]['exam_mark'][z]['total_marks'].split('.');
+                                        var pre_exammark = data[j]['rpt_exam_mark'][z]['total_marks'].split('.');
                                         var pre_exam_total = pre_exammark[1];
 
                                         if(pre_exam_total == '00'){
                                             var exam_total = pre_exammark[0];
                                         }
                                         else{
-                                            var exam_total = data[j]['exam_mark'][z]['total_marks'];
+                                            var exam_total = data[j]['rpt_exam_mark'][z]['total_marks'];
                                         }
 
                                         //CA marks
-                                        if(data[j]['exam_mark'][z]['exam_type_id'] == 2){
+                                        if(data[j]['rpt_exam_mark'][z]['exam_type_id'] == 2){
                                             //var exammark_ca = data[j]['exam_mark'][z]['mark'];
 
-                                            var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
+                                            var exammark_prec_ca = ((data[j]['rpt_exam_mark'][z]['mark']) * ((data[j]['rpt_exam_mark'][z]['persentage'])/100)).toFixed(2);;
 
                                             var pre_exammark_ca = exammark_prec_ca.split('.');
 
@@ -1943,42 +1989,44 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                                 var exam_total_ca = exammark_prec_ca;
                                             }
                                         }
+                                       //console.log(data[j]['rpt_exam_mark'][z]['mark']);
+                                     //  console.log(data[j]['rpt_exam_mark'][z]['persentage']);
 
                                         if(user_level=='ca_mark'){
-                                            if(data[j]['exam_mark'][z]['detail_is_hod_mark_aproved'] == '0' && data[j]['exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
-                                                if(data[j]['exam_mark'][z]['repeat_apply_for'] == 1){
-                                                    rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total_ca;
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                            if(data[j]['rpt_exam_mark'][z]['detail_is_hod_mark_aproved'] == '0' && data[j]['rpt_exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
+                                                if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
+                                                    rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
 
                                                     ////////// check if condition for re correction ///////////
-                                                    if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                    if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1'){
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                                     }
                                                     else{
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }
                                                 }
                                             }
                                             else{
-                                                if(data[j]['exam_mark'][z]['mark'] == 0 || data[j]['exam_mark'][z]['mark'] == null){
-                                                    if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-                                                        rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                if(data[j]['rpt_exam_mark'][z]['mark'] == 0 || data[j]['rpt_exam_mark'][z]['mark'] == null){
+                                                    if(data[j]['rpt_exam_mark'][z]['is_repeat'] == 3){
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "NE";
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }
                                                     else{
-                                                        if(data[j]['exam_mark'][z]['repeat_apply_for'] == 1){
-                                                            rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total_ca;
-                                                            rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                        if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
+                                                            rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;
+                                                            rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                         }
                                                     }
                                                 }
                                                 else{
-                                                    if(data[j]['exam_mark'][z]['repeat_apply_for'] == 1){
-                                                        rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total_ca;
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                    if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }else{
-                                                        rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total_ca + "<br/>CA Marks Approved<p hidden> 1</p>";
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca + "<br/>CA Marks Approved<p hidden> 1</p>";
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }
                                                 }
                                             }
@@ -1988,63 +2036,63 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                           //      subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['exam_mark'][z]['overall_grade'];
                                           //  }
                                           //  else{
-                                                if(data[j]['exam_mark'][z]['exam_type_id'] == '2')
+                                                if(data[j]['rpt_exam_mark'][z]['exam_type_id'] == '2')
                                                 {
-                                                    if(data[j]['exam_mark'][z]['is_repeat_approved'] > 2){
-                                                        rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'NE';
-                                                        rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                    if(data[j]['rpt_exam_mark'][z]['is_repeat_approved'] > 2){
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = 'NE';
+                                                        rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }
                                                     else{
-                                                        if(data[j]['exam_mark'][z]['detail_is_hod_mark_aproved'] == '0'){
-                                                            rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "CA marks not approved by HOD";
-                                                            rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                        if(data[j]['rpt_exam_mark'][z]['detail_is_hod_mark_aproved'] == '0'){
+                                                            rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "CA marks not approved by HOD";
+                                                            rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                         }
                                                         else{
-                                                            if(data[j]['exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
-                                                                rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "CA marks not approved by Director";
-                                                                rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                            if(data[j]['rpt_exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
+                                                                rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "CA marks not approved by Director";
+                                                                rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                             }
 
 
-                                                            if((data[j]['exam_mark'][z]['marking_details'].length == 1) && (data[j]['exam_mark'][z]['marking_details'][0]['type_id'] == 2)){ //---ASSIGNMENT ONLY---
-                                                                if(data[j]['exam_mark'][z]['is_ex_director_mark_approved'] == '1'){
-                                                                    rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['exam_mark'][z]['result']+"<br/>SE Marks Approved<p hidden> 2</p>";
-                                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                            if((data[j]['rpt_exam_mark'][z]['marking_details'].length == 1) && (data[j]['rpt_exam_mark'][z]['marking_details'][0]['type_id'] == 2)){ //---ASSIGNMENT ONLY---
+                                                                if(data[j]['rpt_exam_mark'][z]['is_ex_director_mark_approved'] == '1'){
+                                                                    rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['rpt_exam_mark'][z]['result']+"<br/>SE Marks Approved<p hidden> 2</p>";
+                                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
                                                 else{
-                                                    if(data[j]['exam_mark'][z]['is_ex_director_mark_approved'] == '0'){
-                                                        rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['exam_mark'][z]['result'];
+                                                    if(data[j]['rpt_exam_mark'][z]['is_ex_director_mark_approved'] == '0'){
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['rpt_exam_mark'][z]['result'];
 
                                                         ////////// check if condition for re correction ///////////
-                                                        if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['exam_mark'][z]['sem_exam_id'])){
-                                                            rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                        if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['rpt_exam_mark'][z]['sem_exam_id'])){
+                                                            rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                                         }
                                                         else{
-                                                            rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                            rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                         }
                                                     }
                                                     else{
-                                                        if(data[j]['exam_mark'][z]['sem_exam_id'] == exam_id){
-                                                            if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-                                                                rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-                                                                rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                        if(data[j]['rpt_exam_mark'][z]['sem_exam_id'] == exam_id){
+                                                            if(data[j]['rpt_exam_mark'][z]['is_repeat'] == 3){
+                                                                rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "NE";
+                                                                rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                             }else{
-                                                                rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['exam_mark'][z]['result']+"<br/>SE Marks Approved<p hidden> 2</p>";
-                                                                rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                                rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['rpt_exam_mark'][z]['result']+"<br/>SE Marks Approved<p hidden> 2</p>";
+                                                                rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                             }
                                                         }
                                                         else{
-                                                            if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-                                                                rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
-                                                                rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                            if(data[j]['rpt_exam_mark'][z]['is_repeat'] == 3){
+                                                                rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "NE";
+                                                                rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                             }
                                                             else{
-                                                                rpt_subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['exam_mark'][z]['result'];
-                                                                rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                                rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total + "/" + data[j]['rpt_exam_mark'][z]['result'];
+                                                                rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                             }
                                                         }
                                                     }

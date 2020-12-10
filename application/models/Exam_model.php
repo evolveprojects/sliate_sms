@@ -797,27 +797,53 @@ class Exam_model extends CI_Model
                     $ishold = $data['ishold'];
                     $fraud_id = $data['fraud_id'];
                 }
-                $insert_exam_mark = array(
-                    'student_id' => $data['stu_id'],
-                    'course_id' => $data['course_id'],
-                    'year_no' => $data['year_no'],
-                    'semester_no' => $data['semester_no'],
-                    'batch_id' => $data['batch_id'],
-                    'sem_exam_id' => $sem_exam_id,
-                    'subject_id' => $data['subject_id'],
-                    'total_marks' => $data['total_mark'],
-                    'overall_grade' => $data['overall_grade'],
-                    'grade_point' => $data['grade_point'],
-                    'subject_credit' => $data['subject_point'],
-                    'result' => $data['result_grade'], 
-                    'fraud_status' => $fraud_status, 
-                    'is_hold' => $ishold, 
-                    'fraud_id' => $fraud_id, 
-                    'is_repeat_approve' => 0,
-                    'is_repeat_mark' => 0,
-                    'added_by' => $this->session->userdata('u_id'),
-                    'added_on' => date("Y-m-d h:i:s", now())                    
-                );
+               
+                    if($data['repeat_val']==1){
+                        $insert_exam_mark = array(
+                            'student_id' => $data['stu_id'],
+                            'course_id' => $data['course_id'],
+                            'year_no' => $data['year_no'],
+                            'semester_no' => $data['semester_no'],
+                            'batch_id' => $data['batch_id'],
+                            'sem_exam_id' => $sem_exam_id,
+                            'subject_id' => $data['subject_id'],
+                            'total_marks' => $data['total_mark'],
+                            'overall_grade' => $data['overall_grade'],
+                            'grade_point' => $data['grade_point'],
+                            'subject_credit' => $data['subject_point'],
+                            'result' => $data['result_grade'], 
+                            'fraud_status' => $fraud_status, 
+                            'is_hold' => $ishold, 
+                            'fraud_id' => $fraud_id, 
+                            'is_repeat_approve' => 0,
+                            'is_repeat_mark' => 1,
+                            'added_by' => $this->session->userdata('u_id'),
+                            'added_on' => date("Y-m-d h:i:s", now())                    
+                        );
+                    }else {
+                    $insert_exam_mark = array(
+                        'student_id' => $data['stu_id'],
+                        'course_id' => $data['course_id'],
+                        'year_no' => $data['year_no'],
+                        'semester_no' => $data['semester_no'],
+                        'batch_id' => $data['batch_id'],
+                        'sem_exam_id' => $sem_exam_id,
+                        'subject_id' => $data['subject_id'],
+                        'total_marks' => $data['total_mark'],
+                        'overall_grade' => $data['overall_grade'],
+                        'grade_point' => $data['grade_point'],
+                        'subject_credit' => $data['subject_point'],
+                        'result' => $data['result_grade'], 
+                        'fraud_status' => $fraud_status, 
+                        'is_hold' => $ishold, 
+                        'fraud_id' => $fraud_id, 
+                        'is_repeat_approve' => 0,
+                        'is_repeat_mark' => 0,
+                        'added_by' => $this->session->userdata('u_id'),
+                        'added_on' => date("Y-m-d h:i:s", now())                    
+                    );
+                }
+               
                 $this->db->insert('exm_mark', $insert_exam_mark);
                 $max_exam_mark_id = $this->get_max_exam_mark_id();
 
@@ -974,13 +1000,13 @@ class Exam_model extends CI_Model
                                 $this->db->trans_rollback();
                                 $res['status'] = 'Failed';
                                 $res['message'] = 'Failed to save Subject marks';
-                                log_message("1");
+                               // log_message("1");
                                 //$this->logger->systemlog('Save Subject Marks', 'Failure', 'Failed to update Repeat Subject marks', date("Y-m-d H:i:s", now()),$insert_exam_mark);
                             } else {
                                 $this->db->trans_commit();
                                 $res['status'] = 'success';
                                 $res['message'] = 'Subject marks saved successfully.';
-                                log_message("1");
+                               // log_message("1");
                                 //$this->logger->systemlog('Save Subject Marks', 'Success', 'Repeat Subject marks updated successfully', date("Y-m-d H:i:s", now()),$insert_exam_mark);
                             }
                         //return $res;
@@ -1046,14 +1072,16 @@ class Exam_model extends CI_Model
                             $save_mark = $data['subject_mark'][$i];
                         }
                         $update_mark_details = array(
-                            'exam_mark_id' => $mark_id,
-                            'exam_type_id' => $data['type_id'][$i],
+                            //'exam_mark_id' => $mark_id,
+                            //'exam_type_id' => $data['type_id'][$i],
                             'persentage' => $data['persentage'][$i],
                             'mark' => $save_mark,
                             'updated_by' => $this->session->userdata('u_id'),
                             'updated_on' => date("Y-m-d h:i:s", now())
                         );
-                        $this->db->where('id', $existing_detail_id['id']);
+                       // $this->db->where('id', $existing_detail_id['id']);
+                        $this->db->where('exam_mark_id', $mark_id);
+                        $this->db->where('exam_type_id', $data['type_id'][$i]);
                         $this->db->update('exm_mark_details', $update_mark_details);
                     }
                // } 
@@ -1188,8 +1216,9 @@ class Exam_model extends CI_Model
         $this->db->where('course_id', $data['course_id']);
         $this->db->where('year_no', $data['year_no']);
         $this->db->where('semester_no', $data['semester_no']);
-        //$this->db->where('batch_id', $batch);
+        $this->db->where('batch_id', $data['batch_id']);
         $this->db->where('subject_id', $data['subject_id']);
+        $this->db->where('is_repeat_mark', $data['repeat_val']);
         $this->db->where('deleted', 0);
         $result_array = $this->db->get('exm_mark')->row_array();
         if (!empty($result_array)) {
@@ -1397,6 +1426,19 @@ class Exam_model extends CI_Model
     }
 
     function load_hallstudents($hall)
+    {
+        //exm_semester_exam_details.*,stu_reg.admission_no,stu_reg.first_name,stu_reg.last_name
+        $this->db->select('*,exm_semester_exam_details.*,stu_reg.admission_no,stu_reg.first_name,stu_reg.last_name');
+        $this->db->join('stu_reg','stu_reg.stu_id=exm_semester_exam_details.student_id');
+        $this->db->where('hall_id', $hall);
+        $this->db->where('is_attend',0);
+        // $this->db->where('subject_id',$subject);
+        $stulist = $this->db->get('exm_semester_exam_details')->result_array();
+
+        return $stulist;
+    }
+    // kasun repeate student load for exam hall
+    function load_hallRptStudents($hall)
     {
         //exm_semester_exam_details.*,stu_reg.admission_no,stu_reg.first_name,stu_reg.last_name
         $this->db->select('*,exm_semester_exam_details.*,stu_reg.admission_no,stu_reg.first_name,stu_reg.last_name');
