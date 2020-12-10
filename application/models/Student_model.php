@@ -1789,7 +1789,7 @@ class Student_model extends CI_Model
             $this->db->where('ed.deleted', 0);
             $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();
         }
-//        print_r($result_array); is_ex_director_mark_approved
+        //        print_r($result_array); is_ex_director_mark_approved
         return $result_array;
     }
     
@@ -1855,6 +1855,28 @@ class Student_model extends CI_Model
                 $this->db->where('ed.deleted', 0);
                 $this->db->where('sedr.deleted', 0);
                 $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();
+
+
+                 /// load repeate students
+                 $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
+                 em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
+                 ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');
+                 $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
+                 $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
+                 $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
+                 $this->db->join('mod_subject co', 'co.id = em.subject_id');
+                 $this->db->where('em.course_id', $data['course_id']);
+                 //$this->db->where('em.batch_id', $data['batch_id']);
+                 //$this->db->where('em.batch_id', $rbatch);
+                 $this->db->where('em.year_no', $data['year_no']);
+                 $this->db->where('em.semester_no', $data['semester_no']);
+                 $this->db->where('em.student_id', $result_array[$i]['stu_id']);
+                 $this->db->where('co.is_training_apply', 0);
+                 $this->db->where('em.deleted', 0);
+                 $this->db->where('ed.deleted', 0);
+                 $this->db->where('sedr.deleted', 0);
+                 $this->db->where('em.is_repeat_mark', 1);
+                 $result_array[$i]['rpt_exam_mark'] = $this->db->get('exm_mark em')->result_array(); 
             }
         }
 //        print_r($result_array); is_ex_director_mark_approved

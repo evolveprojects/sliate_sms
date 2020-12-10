@@ -1719,13 +1719,44 @@ class Approval_model extends CI_Model
         $this->db->where('id', $mark_id);
         $this->db->update('exm_mark', $update_exam_mark);
 
+        $existing_detail_ids = $this->exam_model->get_ids__mark_detail_id_by_mark_id($mark_id);
+
+        //return $existing_detail_ids;
+
+        //detals table update 
+
+        
+            foreach($existing_detail_ids as $existing_detail_id){
+                $this->db->select('exam_type_id,id');
+                $this->db->where('id', $existing_detail_id['id']);
+                $exam_mark_details_id = $this->db->get('exm_mark_details')->row_array();
+
+
+                
+                    if($exam_mark_details_id['exam_type_id']==2){
+                        if($data['page']=="hod"){
+                        $update_exam_mark = array(
+                            'is_hod_mark_aproved' => $data['status'],
+                            'hod_mark_aproved_by' => $this->session->userdata('u_id'),
+                            'hod_mark_aproved_date' => date("Y-m-d h:i:s", now()),
+                        );
+                        $this->db->where('id', $exam_mark_details_id['id']);
+                        $this->db->update('exm_mark_details', $update_exam_mark);
+                        }
+                       
+                    }
+
+            }
+
+        
+
         //update hc_mark_details
         // $this->db->trans_rollback();
-        $existing_detail_ids = $this->exam_model->get_ids__mark_detail_id_by_mark_id($mark_id);
+      
         // return $existing_detail_ids;
         //return 'persentage count :'.count($data['persentage']).'  ids:'.count($existing_detail_ids);
-        if (count($existing_detail_ids) == 2) {
-//            for ($i = 0; $i < count($data['persentage']); $i++) {
+      /*  if (count($existing_detail_ids) == 2) {
+            //            for ($i = 0; $i < count($data['persentage']); $i++) {
             //                if($data['subject_mark'][$i] == null || $data['subject_mark'][$i] == '' || $data['overall_grade'] == 'AB' ){
             //                    $mark = null;
             //                } else {
@@ -1757,7 +1788,7 @@ class Approval_model extends CI_Model
             $this->db->where('exm_mark_details.deleted', 0);
             //$this->db->where('exm_mark_details.persentage', $data['persentage']);
             $exam_mark_details_id = $this->db->get('exm_mark')->row_array();
-//return $exam_mark_details_id;
+            //return $exam_mark_details_id;
             // if ($exam_mark_details_id != null || $exam_mark_details_id != '') {
             $update_exam_mark = array(
                 'is_hod_mark_aproved' => $data['status'],
@@ -1797,6 +1828,7 @@ class Approval_model extends CI_Model
             }
         }
 
+*/
         //====================== update mark approval status =================================
 
 //        $type_id = 2;//type 2 is Assignment,

@@ -1055,10 +1055,11 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
     }
 
     function open_mark_model(batch_id, stu_id, subject_id, approve_status, status) {
+       // console.log('popup show');
         //alert($("#subject_mark_"+subject_code).text());
         var mark = $("#" + stu_id + "_subject_mark_" + subject_id).text();
 
-        // alert(user_level);
+        //alert(user_level);
         // alert(mark);exam_type_id  is_hod_mark_aproved
         var repeat = 0;
 
@@ -1135,11 +1136,9 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                     var di_exam_mark = data['exam_mark'];
                     var di_marking_details = data['subject_details']['marking_details'];
 
-                for (var j = 0; j < data['exam_mark'].length; j++) {
-                        if (user_level == 'hod' || user_level == 'dir') {
-                            if (data['exam_mark'][j]['exam_type_id'] == 2) {
 
-                                switch (data['user_level']) {
+
+                    switch (data['user_level']) {
                                     case "1":
                                         var write_mark = '';
                                         var Assignment_mark = '';
@@ -1197,30 +1196,53 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                 }
                                 $("#mark_data_tbl").append("<tr><th>#</th><th>Type</th><th>Precentage</th><th>Mark</th></tr>");
 
-                               // debugger;
-                                // di_exam_mark;
-                                // di_marking_details;
 
-                                // for (var j = 0; j < data['subject_details']['marking_details'].length; j++) {
-                                //if(data['exam_mark'][k]['exam_type_id'] == 2) {
-                                if (typeof data['exam_mark'][j]==='undefined') {
-                                    if (data['exam_mark'][j]['mark'] === null || data['exam_mark'][j]['mark'] === '') {
+
+
+            var total_marks='';
+              //  for (var j = 0; j < data['exam_mark'].length; j++) {
+                for (var j = 0; j < data['subject_details']['marking_details'].length; j++) {
+                    console.log("loop"+j);
+
+                      //exam mark index search type_id
+                                
+                    if (data['exam_mark'].length > 0) {
+                        var exam_mark_index=0;
+                        exam_mark_index= data['exam_mark'].findIndex(x => x.exam_type_id === data['subject_details']['marking_details'][j]['type_id']);
+                       
+                    }else{
+                        continue;
+                    }
+
+                        if (user_level == 'hod' || user_level == 'dir') {
+                              
+
+                          
+                        } else {
+                            
+                        } // top for ends here
+
+                        if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
+                                console.log('se');
+
+                                if (exam_mark_index !=-1) {
+                                    if (data['exam_mark'][exam_mark_index]['mark'] === null || data['exam_mark'][exam_mark_index]['mark'] === '') {
                                         var subject_mark = '';
                                     } else {
-                                        var pre_mark = data['exam_mark'][j]['mark'].split('.');
+                                        var pre_mark = data['exam_mark'][exam_mark_index]['mark'].split('.');
                                         var decimalvalue = pre_mark[1];
 
                                         if (decimalvalue == '00') {
                                             var subject_mark = pre_mark[0];
                                         } else {
-                                            var subject_mark = data['exam_mark'][j]['mark'];
+                                            var subject_mark = data['exam_mark'][exam_mark_index]['mark'];
                                         }
                                     }
                                 } else {
                                     var subject_mark = '';
                                 }
 
-                                if (user_level == 'ex_dir') {
+                               /* if (user_level == 'ex_dir') {
                                     if (repeat_status == 1) {
                                         if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
                                             var is_attempt = "readonly='readonly'";
@@ -1236,31 +1258,21 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                             var is_attempt = '';
                                         }
                                     }
-                                } else {
-                                    if (data['exam_mark'][data['exam_mark'].length - 1]['overall_grade'] == 'AB')
+                                } else {*/
+                                    if (data['exam_mark'][exam_mark_index]['overall_grade'] == 'AB')
                                         var is_attempt = "readonly='readonly'";
                                     else
                                         var is_attempt = '';
-                                }
+                               // }
 
                                 var readonly_text = '';
                                 var change_function = '';
-                                if (data['subject_details']['marking_details'][j]['type_id'] == 1) {
-                                    change_function = false;
-                                    readonly_text = write_mark;
-                                    if (user_level == 'hod')
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'dir')
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'ex_dir')
-                                        readonly_text = "readonly='readonly'";
+                                
+                                
 
-                                    if ((user_level == 'hod') || (user_level == 'dir')) {
-                                        var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
-                                    } else {
-                                        var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
-                                    }
-                                } else if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
+
+                              //  if (data['subject_details']['marking_details'][MD_index]['type_id'] == 2) {
+                               // } else if (data['exam_mark'][j]['exam_type_id'] == 2) {
                                     readonly_text = Assignment_mark;
                                     change_function = true;
                                     if (user_level == 'hod')
@@ -1272,42 +1284,42 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                         readonly_text = "readonly='readonly'";
                                     var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
 
-                                    $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
+                                    $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][exam_mark_index].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
                           
-                                } else {
-                                    readonly_text = "readonly='readonly'";
-                                    change_function = '';
-                                }
+                               // } else {
+                               //     readonly_text = "readonly='readonly'";
+                              //      change_function = '';
+                               // }
                                         //alert(readonly_text);
                                 //$("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'> <input   type='text'   name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total("+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ");'  " + readonly_text + " /> </div></td></tr>");
 
-                                //kasun//  $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
+                              // $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
                                    //     } //modified
                                 // }
 
-                                if (data['exam_mark'].length != 0) {
+                              //  if (data['exam_mark'].length != 0) {
 
-                                    var pre_totalmark = data['exam_mark'][j]['total_marks'].split('.');
+                                    var pre_totalmark = data['exam_mark'][exam_mark_index]['total_marks'].split('.');
                                     var totaldecimalvalue = pre_totalmark[1];
 
                                     if (totaldecimalvalue == '00') {
-                                        var total_marks = pre_totalmark[0];
+                                         total_marks = pre_totalmark[0];
                                     } else {
-                                        var total_marks = data['exam_mark'][j]['total_marks'];
+                                         total_marks = data['exam_mark'][exam_mark_index]['total_marks'];
                                     }
 
 
                                     if ((user_level == 'hod') || (user_level == 'dir')) {
-                                        var totmark_prec_ca = ((data['exam_mark'][j]['mark']) * ((data['exam_mark'][j]['persentage']) / 100)).toFixed(2);
+                                        var totmark_prec_ca = ((data['exam_mark'][exam_mark_index]['mark']) * ((data['exam_mark'][exam_mark_index]['persentage']) / 100)).toFixed(2);
 
                                         var pre_totmark_ca = totmark_prec_ca.split('.');
 
                                         var pre_mark_total_ca = pre_totmark_ca[1];
 
                                         if (pre_mark_total_ca == '00') {
-                                            var total_marks = pre_totmark_ca[0];
+                                             total_marks = pre_totmark_ca[0];
                                         } else {
-                                            var total_marks = totmark_prec_ca;
+                                             total_marks = totmark_prec_ca;
                                         }
                                     }
 
@@ -1318,21 +1330,20 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     var GPA_temp = data['gpa_value'];
                                     var GPA = parseFloat(GPA_temp).toFixed(2);
 
-                                } else {
+                                /*} else {
                                     var total_marks = '';
                                     var overall_grade = '';
                                     var grade_point = '';
                                     var subject_point = '';
                                     var result_grade = '';
 
-                                }
-
-
-                                if (user_level == 'ex_dir') {
+                                }*/
+                                total_marks = data['exam_mark'][exam_mark_index]['total_marks'];
+                              //  if (user_level == 'ex_dir') {
                                     if (repeat_status == 1) {
                                         if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
                                             //total_marks = 0;
-                                            total_marks = data['exam_mark'][0]['total_marks'];
+                                            total_marks = data['exam_mark'][exam_mark_index]['total_marks'];
                                             overall_grade = 'AB';
                                             $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
 
@@ -1342,7 +1353,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     } else {
                                         if (data['subject_details']['is_attend'] == 0) {
                                             //total_marks = 0;
-                                            total_marks = data['exam_mark'][0]['total_marks'];
+                                            total_marks = data['exam_mark'][exam_mark_index]['total_marks'];
                                             overall_grade = 'AB';
                                             $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
 
@@ -1352,11 +1363,11 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     }
 
                                     //$("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
-                                    $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'><input type='hidden' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
+                                   // $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'><input type='hidden' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
 
 
-                                } else {
-                                    if (data['exam_mark'][j]['overall_grade'] == 'AB') {
+                               /* } else {
+                                    if (data['exam_mark'][exam_mark_index]['overall_grade'] == 'AB') {
                                         total_marks = 0;
                                         overall_grade = 'AB';
                                         $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
@@ -1364,239 +1375,179 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     } else {
                                         var is_attempt = '';
                                     }
-                                    $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-4'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-4' hidden> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
-                                }
+                                        }*/
+
+                                
                                 //disable approve button
                             } // top if ends here
-                        } else {
-                            if(data['exam_mark'][j]['exam_type_id'] == 1) {
-
-                                switch (data['user_level']) {
-                                    case "1":
-                                        var write_mark = '';
-                                        var Assignment_mark = '';
-                                        break;
-                                    case "2":
-                                        var write_mark = "";
-                                        var Assignment_mark = "readonly='readonly'";
-                                        break;
-                                    case "3":
-                                        var write_mark = "readonly='readonly'";
-                                        var Assignment_mark = "readonly='readonly'";
-                                        break;
-                                    case "4":
-                                        var write_mark = "readonly='readonly'";
-                                        var Assignment_mark = '';
-                                        break;
-                                    case "5":
-                                        var write_mark = "readonly='readonly'";
-                                        var Assignment_mark = "readonly='readonly'";
-                                        break;
-
-                                    default:
-                                        var write_mark = "readonly='readonly'";
-                                        var Assignment_mark = "readonly='readonly'";
-                                }
-                                                //alert('write_mark'+write_mark);
-                                            //alert('Assignment_mark'+Assignment_mark);
-                                $(".modal_title").text("Exam Marks : Course: " + data['course_code'] + "- Batch : " + data['batch_code'] + "  Y" + year + "/ S" + semester);
-                                jQuery("label[for='student_name']").html(data['first_name']);
-                                jQuery("label[for='reg_no_data']").html(data['reg_no']);
-                                jQuery("label[for='admmision_data']").html(data['reg_no']);
-                                        //
-                                //$('#hidden_div').append("<input type='text' name='subject_id' id='subject_id' value='" + data['subject_details']['subject_id'] + "' hidden>");
-                                //$("#mark_data_tbl").append("<tr><th colspan='4'>" + data['subject_details']['subject_code'] + " - " + data['subject_details']['subject'] + " </th></tr>");
-                                //$("#mark_data_tbl").append("<tr><th>#</th><th>Type</th><th>Precentage</th><th>Mark</th></tr>");
 
 
-                                var repeat_status = 0;
-                                for (var z = 0; z < data['subject_details']['repeat_details'].length; z++) {
-                                    if(data['subject_details']['repeat_details'][z]['is_repeat_approved'] == 1){
-                                        repeat_status = 1;
+                        if(data['subject_details']['marking_details'][j]['type_id'] == 1) {
+                            //continue;
+
+                            console.log('ca');
+
+                                    //  debugger;
+                            // di_exam_mark;
+                            // di_marking_details;
+
+                            // for (var j = 0; j < data['subject_details']['marking_details'].length; j++) {
+                            //if(data['exam_mark'][k]['exam_type_id'] == 2) {
+
+                            if (exam_mark_index != -1) {
+                                if (data['exam_mark'][exam_mark_index]['mark'] === null || data['exam_mark'][exam_mark_index]['mark'] === '') {
+                                    var subject_mark = '';
+                                } else {
+                                    var pre_mark = data['exam_mark'][exam_mark_index]['mark'].split('.');
+                                    var decimalvalue = pre_mark[1];
+
+                                    if (decimalvalue == '00') {
+                                        var subject_mark = pre_mark[0];
+                                    } else {
+                                        var subject_mark = data['exam_mark'][exam_mark_index]['mark'];
                                     }
                                 }
+                            } else {
+                                var subject_mark = '';
+                            }
 
+                            if (user_level == 'ex_dir') {
+                                if (repeat_status == 1) {
+                                    if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
+                                        var is_attempt = "readonly='readonly'";
+                                        //subject_mark = 0;
+                                    } else {
+                                        var is_attempt = '';
+                                    }
+                                } else {
+                                    if (data['subject_details']['is_attend'] == 0) {
+                                        var is_attempt = "readonly='readonly'";
+                                        //subject_mark = 0;
+                                    } else {
+                                        var is_attempt = '';
+                                    }
+                                }
+                            } else {
+                                if(exam_mark_index != -1){
+                                if (data['exam_mark'][exam_mark_index]['overall_grade'] == 'AB')
+                                    var is_attempt = "readonly='readonly'";
+                                    else
+                                    var is_attempt = '';
+                                }
+                                else
+                                    var is_attempt = '';
+                            }
+
+                            var readonly_text = '';
+                            var change_function = '';
+                            if (data['subject_details']['marking_details'][j]['type_id'] == 1) {
+                                change_function = false;
+                                readonly_text = write_mark;
+                                if (user_level == 'hod')
+                                    readonly_text = "readonly='readonly'";
+                                else if (user_level == 'dir')
+                                    readonly_text = "readonly='readonly'";
+                                else if (user_level == 'ex_dir')
+                                    readonly_text = "readonly='readonly'";
+
+                                if ((user_level == 'hod') || (user_level == 'dir')) {
+                                    var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
+                                } else {
+                                    var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
+                                }
+                            } else if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
+                                readonly_text = Assignment_mark;
+                                change_function = true;
+                                if (user_level == 'hod')
+                                    readonly_text = "readonly='readonly'";
+                                else if (user_level == 'dir')
+                                    //readonly_text = "readonly='readonly'";
+                                    readonly_text = "readonly='readonly'";
+                                else if (user_level == 'ex_dir')
+                                    readonly_text = "readonly='readonly'";
+                                var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
+
+
+                            } else {
+                                readonly_text = "readonly='readonly'";
+                                change_function = '';
+                            }
+                                    //alert(readonly_text);
+                            //$("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'> <input   type='text'   name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total("+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ");'  " + readonly_text + " /> </div></td></tr>");
+
+                            // $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
+                           if(exam_mark_index != -1)
+                            $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td> " + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][exam_mark_index].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['exam_mark'][exam_mark_index]['exam_type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['exam_mark'][exam_mark_index]['exam_type_id'] + "' value='" + data['exam_mark'][exam_mark_index].persentage  + "'>" + marks_value + "</div></td></tr>");
+                            else
+                            $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td> " + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type'] + "' value='" + data['subject_details']['marking_details'][j].persentage  + "'>" + marks_value + "</div></td></tr>");
+                            //     } //modified
+                            // }
+
+                            if (data['exam_mark'].length != 0) {
+                                if(exam_mark_index != -1){
+                                        var pre_totalmark = data['exam_mark'][exam_mark_index]['total_marks'].split('.');
+                                        var totaldecimalvalue = pre_totalmark[1];
+
+                                        if(totaldecimalvalue == '00'){
+                                             total_marks = pre_totalmark[0];
+                                        }
+                                        else{
+                                             total_marks = data['exam_mark'][exam_mark_index]['total_marks'];
+                                        }
+
+
+                                        if ((user_level == 'hod') || (user_level == 'dir')) {
+                                            var totmark_prec_ca = ((data['exam_mark'][exam_mark_index]['mark']) * ((data['exam_mark'][exam_mark_index]['persentage'])/100)).toFixed(2);
+
+                                            var pre_totmark_ca = totmark_prec_ca.split('.');
+
+                                            var pre_mark_total_ca = pre_totmark_ca[1];
+
+                                            if(pre_mark_total_ca == '00'){
+                                                 total_marks = pre_totmark_ca[0];
+                                            }
+                                            else{
+                                                 total_marks = totmark_prec_ca;
+                                            }
+                                        }
+                                }else{
+                                    total_marks=data['exam_mark'][0]['total_marks'];
+                                }
+                                var overall_grade = data['exam_mark'][0]['overall_grade'];
+                                var grade_point = data['exam_mark'][0]['grade_point'];
+                                var subject_point = data['subject_details']['credits'];
+                                var result_grade = data['exam_mark'][0]['result'];
+                                var GPA_temp = data['gpa_value'];
+                                var GPA = parseFloat(GPA_temp).toFixed(2);
+
+                            } else {
+                                var total_marks = '';
+                                var overall_grade = '';
+                                var grade_point = '';
+                                var subject_point = '';
+                                var result_grade = '';
+
+                            }
+
+
+
+                           /* if(user_level=='ex_dir') {
                                 if(repeat_status == 1){
-                                    $(".modal_title").text("Exam Marks : Course: " + data['subject_details']['repeat_details'][0]['course_code'] + "- Batch : " + data['subject_details']['repeat_details'][0]['batch_code'] + "  Y" + year + "/ S" + semester);
-                                    jQuery("label[for='student_name']").html(data['subject_details']['repeat_details'][0]['first_name']);
-                                    jQuery("label[for='reg_no_data']").html(data['subject_details']['repeat_details'][0]['reg_no']);
-                                    jQuery("label[for='admmision_data']").html(data['subject_details']['repeat_details'][0]['reg_no']);
-                                    $('#hidden_div').append("<input type='text' name='subject_id' id='subject_id' value='" + data['subject_details']['repeat_details'][0]['subject_id'] + "' hidden>");
-                                    $("#mark_data_tbl").append("<tr><th colspan='4'>" + data['subject_details']['repeat_details'][0]['code'] + " - " + data['subject_details']['repeat_details'][0]['subject'] + " </th></tr>");
+                                    if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
+                                        //total_marks = 0;
+                                        total_marks = data['exam_mark'][0]['total_marks'];
+                                        overall_grade = 'AB';
+                                        $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
+
+                                    }
+                                    else{
+                                        var is_attempt = '';
+                                    }
                                 }
                                 else{
-                                    $('#hidden_div').append("<input type='text' name='subject_id' id='subject_id' value='" + data['subject_details']['subject_id'] + "' hidden>");
-                                    $("#mark_data_tbl").append("<tr><th colspan='4'>" + data['subject_details']['subject_code'] + " - " + data['subject_details']['subject'] + " </th></tr>");
-                                }
-                                $("#mark_data_tbl").append("<tr><th>#</th><th>Type</th><th>Precentage</th><th>Mark</th></tr>");
-
-                                         //  debugger;
-                                // di_exam_mark;
-                                // di_marking_details;
-
-                                // for (var j = 0; j < data['subject_details']['marking_details'].length; j++) {
-                                //if(data['exam_mark'][k]['exam_type_id'] == 2) {
-                                if (data['exam_mark'][j]) {
-                                    if (data['exam_mark'][j]['mark'] === null || data['exam_mark'][j]['mark'] === '') {
-                                        var subject_mark = '';
-                                    } else {
-                                        var pre_mark = data['exam_mark'][j]['mark'].split('.');
-                                        var decimalvalue = pre_mark[1];
-
-                                        if (decimalvalue == '00') {
-                                            var subject_mark = pre_mark[0];
-                                        } else {
-                                            var subject_mark = data['exam_mark'][j]['mark'];
-                                        }
-                                    }
-                                } else {
-                                    var subject_mark = '';
-                                }
-
-                                if (user_level == 'ex_dir') {
-                                    if (repeat_status == 1) {
-                                        if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
-                                            var is_attempt = "readonly='readonly'";
-                                            //subject_mark = 0;
-                                        } else {
-                                            var is_attempt = '';
-                                        }
-                                    } else {
-                                        if (data['subject_details']['is_attend'] == 0) {
-                                            var is_attempt = "readonly='readonly'";
-                                            //subject_mark = 0;
-                                        } else {
-                                            var is_attempt = '';
-                                        }
-                                    }
-                                } else {
-                                    if (data['exam_mark'][data['exam_mark'].length - 1]['overall_grade'] == 'AB')
-                                        var is_attempt = "readonly='readonly'";
-                                    else
-                                        var is_attempt = '';
-                                }
-
-                                var readonly_text = '';
-                                var change_function = '';
-                                if (data['subject_details']['marking_details'][j]['type_id'] == 1) {
-                                    change_function = false;
-                                    readonly_text = write_mark;
-                                    if (user_level == 'hod')
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'dir')
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'ex_dir')
-                                        readonly_text = "readonly='readonly'";
-
-                                    if ((user_level == 'hod') || (user_level == 'dir')) {
-                                        var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
-                                    } else {
-                                        var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
-                                    }
-                                } else if (data['subject_details']['marking_details'][j]['type_id'] == 2) {
-                                    readonly_text = Assignment_mark;
-                                    change_function = true;
-                                    if (user_level == 'hod')
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'dir')
-                                        //readonly_text = "readonly='readonly'";
-                                        readonly_text = "readonly='readonly'";
-                                    else if (user_level == 'ex_dir')
-                                        readonly_text = "readonly='readonly'";
-                                    var marks_value = "<input type='text' name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total(this.value," + data['subject_details']['is_attend'] + "," + data['subject_details']['is_absent_approve'] + "," + data['subject_details']['marking_details'][j]['grading_method_id'] + "," + data['subject_details']['subject_id'] + "," + change_function + "," + repeat_status + ");' " + is_attempt + " " + readonly_text + "  />";
-
-
-                                } else {
-                                    readonly_text = "readonly='readonly'";
-                                    change_function = '';
-                                }
-                                        //alert(readonly_text);
-                                //$("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['subject_details']['marking_details'][j]['percentage'] + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'> <input   type='text'   name='subject_mark[]' value='" + subject_mark + "' id='marks_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "_" + data['subject_details']['marking_details'][j]['grading_method_id'] + "' class='form-control marks_" + data['subject_details']['subject_id'] + "' onkeyup='calculate_total("+data['subject_details']['is_attend']+","+data['subject_details']['is_absent_approve']+","+data['subject_details']['marking_details'][j]['grading_method_id']+"," + data['subject_details']['subject_id'] + "," + change_function + ");'  " + readonly_text + " /> </div></td></tr>");
-
-                               // $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['subject_details']['marking_details'][j]['type'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['subject_details']['marking_details'][j]['type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['subject_details']['marking_details'][j]['type_id'] + "' value='" + data['subject_details']['marking_details'][j]['percentage'] + "'>" + marks_value + "</div></td></tr>");
-                                $("#mark_data_tbl").append("<tr><td>" + (j + 1) + "</td><td>" + data['exam_mark'][j]['exam_type_id'] + "</td><td>" + data['exam_mark'][j].persentage + "%</td><td><div class='col-xs-6'><input type='hidden' name='type_id[]' value='" + data['exam_mark'][j]['exam_type_id'] + "'><input type='hidden' name='persentage[]' id='pers_" + data['subject_details']['subject_id'] + "_" + data['exam_mark'][j]['exam_type_id'] + "' value='" + data['exam_mark'][j].persentage  + "'>" + marks_value + "</div></td></tr>");
-                                //     } //modified
-                                // }
-
-                                if (data['exam_mark'].length != 0) {
-
-                                    var pre_totalmark = data['exam_mark'][j]['total_marks'].split('.');
-                                    var totaldecimalvalue = pre_totalmark[1];
-
-                                    if(totaldecimalvalue == '00'){
-                                        var total_marks = pre_totalmark[0];
-                                    }
-                                    else{
-                                        var total_marks = data['exam_mark'][j]['total_marks'];
-                                    }
-
-
-                                    if ((user_level == 'hod') || (user_level == 'dir')) {
-                                        var totmark_prec_ca = ((data['exam_mark'][j]['mark']) * ((data['exam_mark'][j]['persentage'])/100)).toFixed(2);
-
-                                        var pre_totmark_ca = totmark_prec_ca.split('.');
-
-                                        var pre_mark_total_ca = pre_totmark_ca[1];
-
-                                        if(pre_mark_total_ca == '00'){
-                                            var total_marks = pre_totmark_ca[0];
-                                        }
-                                        else{
-                                            var total_marks = totmark_prec_ca;
-                                        }
-                                    }
-
-                                    var overall_grade = data['exam_mark'][0]['overall_grade'];
-                                    var grade_point = data['exam_mark'][0]['grade_point'];
-                                    var subject_point = data['subject_details']['credits'];
-                                    var result_grade = data['exam_mark'][0]['result'];
-                                    var GPA_temp = data['gpa_value'];
-                                    var GPA = parseFloat(GPA_temp).toFixed(2);
-
-                                } else {
-                                    var total_marks = '';
-                                    var overall_grade = '';
-                                    var grade_point = '';
-                                    var subject_point = '';
-                                    var result_grade = '';
-
-                                }
-
-
-
-                                if(user_level=='ex_dir') {
-                                    if(repeat_status == 1){
-                                        if (data['subject_details']['repeat_details'][0]['is_attend'] == 0) {
-                                            //total_marks = 0;
-                                            total_marks = data['exam_mark'][0]['total_marks'];
-                                            overall_grade = 'AB';
-                                            $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
-
-                                        }
-                                        else{
-                                            var is_attempt = '';
-                                        }
-                                    }
-                                    else{
-                                        if (data['subject_details']['is_attend'] == 0) {
-                                            //total_marks = 0;
-                                            total_marks = data['exam_mark'][0]['total_marks'];
-                                            overall_grade = 'AB';
-                                            $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
-
-                                        }
-                                        else{
-                                            var is_attempt = '';
-                                        }
-                                    }
-
-                                    //$("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
-                                    $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'><input type='hidden' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
-
-
-                                } else {
-                                    if (data['exam_mark'][j]['overall_grade'] == 'AB'  ) {
-                                        total_marks = 0;
+                                    if (data['subject_details']['is_attend'] == 0) {
+                                        //total_marks = 0;
+                                        total_marks = data['exam_mark'][0]['total_marks'];
                                         overall_grade = 'AB';
                                         $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
 
@@ -1604,14 +1555,31 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     else{
                                         var is_attempt = '';
                                     }
-                                    $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-4'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-4' hidden> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
                                 }
-                                //disable approve button
+
+                                //$("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
+                                $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-6'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-3'><input type='hidden' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='grade_point' value='" + grade_point + "' id='grade_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> <input type='hidden' name='subject_point'  value='" + subject_point + "' id='subject_point_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /> </div><div class='col-xs-3'> Result Grade :<input type='text' name='result_grade' value='" + result_grade + "' id='result_grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> <div class='col-xs-3'> GPA  :<input type='text' name='gpa_value' value='" + GPA + "' id='gpa_value_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
+
+
+                            } else {
+                                if (data['exam_mark'][j]['overall_grade'] == 'AB'  ) {
+                                    total_marks = 0;
+                                    overall_grade = 'AB';
+                                    $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
+
+                                }
+                                else{
+                                    var is_attempt = '';
+                                }
+                                $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-4'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-4' hidden> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
+                            }*/
+                            //disable approve button
                             } // top if ends here
-                        } // top for ends here
                     }
                
-               
+                    
+                                        $("#mark_data_tbl").append("<tr><th colspan='2'><div class='col-xs-4'> Total Mark : <input type='text' name='total_mark' value='" + total_marks + "' id='totalmark_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div> </th><th colspan='2'><div class='col-xs-4' hidden> Overall Grade :<input type='text' name='overall_grade' value='" + overall_grade + "' id='grade_" + data['subject_details']['subject_id'] + "' class='form-control' readonly /></div></th></tr>");
+                          
                
                
                 },
@@ -1965,30 +1933,30 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
 
                                     //console.log(data[j]['exam_mark']);
 
-                                    for (z = 0; z < data[j]['exam_mark'].length; z++) {//btn btn-warning btn-xs
+                                    for (z = 0; z < data[j]['rpt_exam_mark'].length; z++) {//btn btn-warning btn-xs
 
 
-                                        if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
+                                        if (data[j]['rpt_exam_mark'][z]['is_hod_mark_aproved'] == 1) {
                                             var style_class = 'btn btn-success btn-xs';
                                             var tooltip = 'Approved';
                                             var onchange_function = 'onclick="event.preventDefault();approval_notify()"';
                                             //alert(data[j]['exam_mark'][z]['subject_id']);
-                                            sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_hod_mark_aproved'];
+                                            sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_hod_mark_aproved'];
 
-                                            hod_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                            hod_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                         }
                                         else {
                                             var style_class = 'btn btn-warning btn-xs';
                                             var tooltip = 'To be Approve ';
-                                            var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"'
-                                            sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_hod_mark_aproved'];
+                                            var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['rpt_exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"'
+                                            sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_hod_mark_aproved'];
 
                                             ////////// check if condition for re correction ///////////
-                                            if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
-                                                hod_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                            if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1'){
+                                                hod_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                             }
                                             else{
-                                                hod_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                hod_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                             }
                                         }
                                         //console.log("sub_array :" );
@@ -2006,7 +1974,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                         //                                        }
 
 
-                                        var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
+                                        var exammark_prec_ca = ((data[j]['rpt_exam_mark'][z]['mark']) * ((data[j]['rpt_exam_mark'][z]['persentage'])/100)).toFixed(2);;
 
                                         var pre_exammark_ca = exammark_prec_ca.split('.');
 
@@ -2023,7 +1991,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                         //                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
                                         //                                        }
                                         //                                        else{
-                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = exam_total + "<br>" + approval_btn;
+                                            subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total + "<br>" + approval_btn;
                                         //}
 
                                     }
