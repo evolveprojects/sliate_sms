@@ -2795,36 +2795,36 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
 
                                     //console.log(data[j]['exam_mark']);
 
-                                    for (z = 0; z < data[j]['exam_mark'].length; z++) {//btn btn-warning btn-xs
+                                    for (z = 0; z < data[j]['rpt_exam_mark'].length; z++) {//btn btn-warning btn-xs
 
-                                        if((data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['mark'] > 0) || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'AB') || (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['result'] == 'NE')|| (data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['mark'] == null) ){
+                                        if((data[j]['rpt_exam_mark'][z]['exam_type_id'] == '1' && data[j]['rpt_exam_mark'][z]['mark'] > 0) || (data[j]['rpt_exam_mark'][z]['exam_type_id'] == '1' && data[j]['rpt_exam_mark'][z]['result'] == 'AB') || (data[j]['rpt_exam_mark'][z]['exam_type_id'] == '1' && data[j]['rpt_exam_mark'][z]['result'] == 'NE')|| (data[j]['rpt_exam_mark'][z]['exam_type_id'] == '1' && data[j]['rpt_exam_mark'][z]['mark'] == null) ){
 
-                                            if (data[j]['exam_mark'][z]['is_ex_director_mark_approved'] == 1) {
+                                            if (data[j]['rpt_exam_mark'][z]['is_ex_director_mark_approved'] == 1) {
                                                 var style_class = 'btn btn-success btn-xs';
                                                 var tooltip = 'Approved';
                                                 var onchange_function = 'onclick="event.preventDefault();approval_notify()"';
-                                                sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_ex_director_mark_approved'];
+                                                sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_ex_director_mark_approved'];
 
                                                 ////////// check if condition for re correction ///////////
-                                                if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['exam_mark'][z]['sem_exam_id'])){
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['rpt_exam_mark'][z]['sem_exam_id'])){
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                                 }
                                                 else{
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                 }
                                             }
                                             else {
                                                 var style_class = 'btn btn-warning btn-xs';
                                                 var tooltip = 'To be Approve';
-                                                var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"';
-                                                sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_ex_director_mark_approved'];
+                                                var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['rpt_exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"';
+                                                sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_ex_director_mark_approved'];
 
                                                 ////////// check if condition for re correction ///////////
-                                                if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['exam_mark'][z]['sem_exam_id'])){
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                                if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1' && (exam_id == data[j]['rpt_exam_mark'][z]['sem_exam_id'])){
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                                 }
                                                 else{
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                 }
                                             }
 
@@ -2834,38 +2834,38 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                             //  subjects_marks[data[j]['exam_mark'][z]['subject_code']] = data[j]['exam_mark'][z]['total_marks'] + "/" + data[j]['exam_mark'][z]['overall_grade'] + "<br>" + approval_btn;
 
 
-                                            if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
-                                                if (data[j]['exam_mark'][z]['is_director_mark_approved'] == 1){
+                                            if (data[j]['rpt_exam_mark'][z]['is_hod_mark_aproved'] == 1) {
+                                                if (data[j]['rpt_exam_mark'][z]['is_director_mark_approved'] == 1){
 
-                                                    var pre_subjmrk = data[j]['exam_mark'][z]['total_marks'].split('.');
+                                                    var pre_subjmrk = data[j]['rpt_exam_mark'][z]['total_marks'].split('.');
                                                     var subjdecivalue = pre_subjmrk[1];
 
                                                     if(subjdecivalue == '00'){
                                                        var subjmrk = pre_subjmrk[0];
                                                     }
                                                     else{
-                                                        var subjmrk = data[j]['exam_mark'][z]['total_marks'];
+                                                        var subjmrk = data[j]['rpt_exam_mark'][z]['total_marks'];
                                                     }
 
-                                                    if(data[j]['exam_mark'][z]['is_repeat'] == 3){
-                                                        subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
+                                                    if(data[j]['rpt_exam_mark'][z]['is_repeat'] == 3){
+                                                        subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "NE";
                                                     }
                                                     else{
-                                                        subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjmrk + "/" + data[j]['exam_mark'][z]['result'] + "<br>" + approval_btn;
+                                                        subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = subjmrk + "/" + data[j]['rpt_exam_mark'][z]['result'] + "<br>" + approval_btn;
                                                     }
                                                 }else{
-                                                    subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'ATI Director Not Approved';
+                                                    subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = 'ATI Director Not Approved';
                                                 }
                                             } else {
-                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'HOD Not Approved';
+                                                subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = 'HOD Not Approved';
 
                                             }
 
-                                            if((data[j]['exam_mark'][z]['exam_type_id'] == '1' && data[j]['exam_mark'][z]['mark'] == null && data[j]['exam_mark'][z]['is_exam_held'] == 1 && data[j]['exam_mark'][z]['is_attend'] == 1)){
-                                                if((data[j]['exam_mark'][z]['is_repeat_approved'] == 1) && (data[j]['exam_mark'][z]['is_repeat'] == 1)){
+                                            if((data[j]['rpt_exam_mark'][z]['exam_type_id'] == '1' && data[j]['rpt_exam_mark'][z]['mark'] == null && data[j]['rpt_exam_mark'][z]['is_exam_held'] == 1 && data[j]['rpt_exam_mark'][z]['is_attend'] == 1)){
+                                                if((data[j]['rpt_exam_mark'][z]['is_repeat_approved'] == 1) && (data[j]['rpt_exam_mark'][z]['is_repeat'] == 1)){
                                                     rpt_se_marks_blank = 1;
-                                                    subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "SE Marks Not Entered.";
-                                                    rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #e62626;';
+                                                    subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = "SE Marks Not Entered.";
+                                                    rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #e62626;';
                                                 }
                                             }
                                         }

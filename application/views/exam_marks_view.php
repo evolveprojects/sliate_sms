@@ -1994,7 +1994,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                      //  console.log(data[j]['rpt_exam_mark'][z]['persentage']);
 
                                         if(user_level=='ca_mark'){
-                                            continue;
+                                           // continue;
                                             if(data[j]['rpt_exam_mark'][z]['detail_is_hod_mark_aproved'] == '0' && data[j]['rpt_exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
                                                 if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
                                                     rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;
