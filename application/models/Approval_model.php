@@ -1961,6 +1961,9 @@ class Approval_model extends CI_Model
                     'mark' => $mark,
                     'added_by' => $this->session->userdata('u_id'),
                     'added_on' => date("Y-m-d h:i:s", now()),
+                    'is_hod_mark_aproved' => 1,
+                    'hod_mark_aproved_by' => $this->session->userdata('u_id'),
+                    'hod_mark_aproved_date' => date("Y-m-d h:i:s", now()),
                 );
                 $this->db->insert('exm_mark_details', $insert_mark_details);
             }
