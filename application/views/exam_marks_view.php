@@ -2024,7 +2024,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                                 }
                                                 else{
                                                     if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
-                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;
+                                                        rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca+ "<br/>CA Marks Approved<p hidden> 1</p>";
                                                         rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                                     }else{
                                                         rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca + "<br/>CA Marks Approved<p hidden> 1</p>";
