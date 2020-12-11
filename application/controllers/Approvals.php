@@ -769,7 +769,7 @@ class Approvals extends CI_Controller
         $data['status'] = $this->input->post('status');
         $data['page'] = $this->input->post('page');
         $data['gpa_value'] = $this->input->post('gpa_value');
-       // $data['repeat_status'] = $this->input->post('repeat_status');
+        $data['repeat_status'] = $this->input->post('repeat_status');
         $data['repeat_val'] = $this->input->post('repeat_status');
         
         if ($this->input->post('page') == "hod") {

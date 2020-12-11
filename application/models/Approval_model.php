@@ -1983,7 +1983,7 @@ class Approval_model extends CI_Model
         $this->db->where('exm_mark_details.deleted', 0);
         //$this->db->where('exm_mark_details.persentage', $data['persentage']);
         $exam_mark_details_id = $this->db->get('exm_mark')->row_array();
-//return $exam_mark_details_id;
+        //return $exam_mark_details_id;
         // if ($exam_mark_details_id != null || $exam_mark_details_id != '') {
         $update_exam_mark = array(
             'is_director_mark_approved' => $data['status'],

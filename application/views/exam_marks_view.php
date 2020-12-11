@@ -1835,6 +1835,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
 
    //------------------------------------------------ REPEAT EXAM MARK --------------------------------------------------------//
     function load_rpt_student_data() {
+        console.log('repeat data load se')
         $('.se-pre-con').fadeIn('slow');
         var res = [];
         var rpt_sem_subject_ids = [];
@@ -1993,6 +1994,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                      //  console.log(data[j]['rpt_exam_mark'][z]['persentage']);
 
                                         if(user_level=='ca_mark'){
+                                            continue;
                                             if(data[j]['rpt_exam_mark'][z]['detail_is_hod_mark_aproved'] == '0' && data[j]['rpt_exam_mark'][z]['detail_is_director_mark_approved'] == '0'){
                                                 if(data[j]['rpt_exam_mark'][z]['repeat_apply_for'] == 1){
                                                     rpt_subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = exam_total_ca;

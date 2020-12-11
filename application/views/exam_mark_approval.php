@@ -2355,41 +2355,41 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
 
                                     //console.log(data[j]['exam_mark']);
 
-                                    for (z = 0; z < data[j]['exam_mark'].length; z++) {//btn btn-warning btn-xs
+                                    for (z = 0; z < data[j]['rpt_exam_mark'].length; z++) {//btn btn-warning btn-xs
 
-                                        dir_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                        dir_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
 
                                         var link_id = '';
-                                        if (data[j]['exam_mark'][z]['is_director_mark_approved'] == 1) {
+                                        if (data[j]['rpt_exam_mark'][z]['is_director_mark_approved'] == 1) {
                                             var style_class = 'btn btn-success btn-xs';
                                             var tooltip = 'Approved';
                                             var onchange_function = 'onclick="event.preventDefault();approval_notify()"';
-                                            link_id = data[j]['stu_id'] + '_subject_mark_' + data[j]['exam_mark'][z]['subject_id'];
+                                            link_id = data[j]['stu_id'] + '_subject_mark_' + data[j]['rpt_exam_mark'][z]['subject_id'];
                                             $('#84_subject_mark_CRS01').removeAttr("href");
-                                            sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_director_mark_approved'];
+                                            sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_director_mark_approved'];
 
-                                            dir_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                            dir_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
 
                                         }
                                         else {
                                             var style_class = 'btn btn-warning btn-xs';
                                             var tooltip = 'To be Approve ';
-                                            var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"'
-                                            sbj_stat_array[data[j]['exam_mark'][z]['subject_id']] = data[j]['exam_mark'][z]['is_director_mark_approved'];
+                                            var onchange_function = 'onclick="event.preventDefault();click_mark(\'' + data[j]['rpt_exam_mark'][z]['subject_id'] + '\',' + data[j]['stu_id'] + ')"'
+                                            sbj_stat_array[data[j]['rpt_exam_mark'][z]['subject_id']] = data[j]['rpt_exam_mark'][z]['is_director_mark_approved'];
 
                                             ////////// check if condition for re correction ///////////
-                                            if(data[j]['exam_mark'][z]['is_recorrection_approved'] == '1'){
-                                                dir_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
+                                            if(data[j]['rpt_exam_mark'][z]['is_recorrection_approved'] == '1'){
+                                                dir_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']] = 'background: #c0e6f6;';
                                             }
                                             else{
-                                                dir_rpt_style_cell[data[j]['exam_mark'][z]['subject_id']]= "";
+                                                dir_rpt_style_cell[data[j]['rpt_exam_mark'][z]['subject_id']]= "";
                                             }
                                         }
                                         //console.log("sub_array :" );
                                         //console.log(sbj_stat_array);
                                         var approval_btn = '<button id="mark_approval" title="' + tooltip + '"  ' + onchange_function + '   class="' + style_class + '"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></button>';
 
-                                        if (data[j]['exam_mark'][z]['is_hod_mark_aproved'] == 1) {
+                                        if (data[j]['rpt_exam_mark'][z]['is_hod_mark_aproved'] == 1) {
                                             //                                            var pre_mrk = data[j]['exam_mark'][z]['total_marks'].split('.');
                                             //                                            var decivalue = pre_mrk[1];
                                             //
@@ -2400,7 +2400,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                             //                                                var subjectmrk = data[j]['exam_mark'][z]['total_marks'];
                                             //                                            }
 
-                                            var exammark_prec_ca = ((data[j]['exam_mark'][z]['mark']) * ((data[j]['exam_mark'][z]['persentage'])/100)).toFixed(2);;
+                                            var exammark_prec_ca = ((data[j]['rpt_exam_mark'][z]['mark']) * ((data[j]['rpt_exam_mark'][z]['persentage'])/100)).toFixed(2);;
 
                                             var pre_exammark_ca = exammark_prec_ca.split('.');
 
@@ -2417,10 +2417,10 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                             //                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = "NE";
                                             //                                            }
                                             //                                            else{
-                                                subjects_marks[data[j]['exam_mark'][z]['subject_id']] = subjectmrk + "<br>" + approval_btn;
+                                                subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = subjectmrk + "<br>" + approval_btn;
                                             //}
                                         } else {
-                                            subjects_marks[data[j]['exam_mark'][z]['subject_id']] = 'HOD Not Approved';
+                                            subjects_marks[data[j]['rpt_exam_mark'][z]['subject_id']] = 'HOD Not Approved';
 
                                         }
                                     }
