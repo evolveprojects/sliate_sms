@@ -4,3 +4,4 @@ system/cache/*
 uploads/*
 package-lock.json
 application/config/database.php
+application/config/database.php

@@ -1789,7 +1789,11 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                     $('#note').append("<div style='background-color:#ffdddd;border-left:6px solid #f44336;margin-bottom: 15px;padding: 4px 12px;'><p><strong>Student is Absent for this subject</strong> </p></div>");
                                 }
                                 calculate_total(subject_mark,data['subject_details']['repeat_details'][0]['is_attend'],data['subject_details']['repeat_details'][0]['is_absent_approve'],data['subject_details']['marking_details'][0]['grading_method_id'], data['subject_details']['subject_id'],true,repeat_status,assignment_only);
+                        }else{
+                             overall_grade="-";
+                        result_grade="-";
                         }
+                       
                     }
                     else{
                         if (user_level=='se_mark'&& data['subject_details']['is_attend'] == 0) {

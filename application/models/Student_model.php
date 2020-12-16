@@ -3967,9 +3967,10 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
     
     function load_rpt_student_for_exam_marks_ca($data)
     {
-        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
+        $this->db->select('sedr.is_repeat,sedr.repeat_apply_for,sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
+        $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
         $this->db->join('stu_reg sr', 'sr.stu_id = eser.stu_id');
         $this->db->join('mod_subject co', 'co.id = eser.subject_id');
 
@@ -4012,27 +4013,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
             for ($x = 0; $x < count($result_array[$i]['applied_subjects']); $x++) {
 
                 // $this->db->select('*,co.code as subject_code');
-                $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
-    em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
-    ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');
-                $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
-                $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
-                $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
-                $this->db->join('mod_subject co', 'co.id = em.subject_id');
-                $this->db->where('em.course_id', $data['course_id']);
-                //$this->db->where('em.batch_id', $data['batch_id']);
-                //$this->db->where('em.batch_id', $rbatch);
-                $this->db->where('em.year_no', $data['year_no']);
-                $this->db->where('em.semester_no', $data['semester_no']);
-                $this->db->where('em.student_id', $result_array[$i]['stu_id']);
-                $this->db->where('co.is_training_apply', 0);
-                $this->db->where('em.deleted', 0);
-                $this->db->where('ed.deleted', 0);
-                $this->db->where('sedr.deleted', 0);
-                $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();
-
-                /// load repeate students
-                $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
+               /* $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
                 em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
                 ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');
                 $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
@@ -4049,8 +4030,49 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
                 $this->db->where('em.deleted', 0);
                 $this->db->where('ed.deleted', 0);
                 $this->db->where('sedr.deleted', 0);
+                $result_array[$i]['exam_mark'] = $this->db->get('exm_mark em')->result_array();*/
+
+                /// load repeate students
+                $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
+                em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
+                ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');//,sedr.is_repeat,sedr.repeat_apply_for
+                $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
+                $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
+               
+                $this->db->join('mod_subject co', 'co.id = em.subject_id');
+                $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
+                $this->db->where('em.course_id', $data['course_id']);
+                //$this->db->where('em.batch_id', $data['batch_id']);
+                //$this->db->where('em.batch_id', $rbatch);
+                $this->db->where('em.year_no', $data['year_no']);
+                $this->db->where('em.semester_no', $data['semester_no']);
+                $this->db->where('em.student_id', $result_array[$i]['stu_id']);
+               
+                $this->db->where('em.deleted', 0);
+                $this->db->where('ed.deleted', 0);
+             
                 $this->db->where('em.is_repeat_mark', 1);
+                $this->db->where('sedr.deleted', 0);
+                $this->db->where('co.is_training_apply', 0);
+
                 $result_array[$i]['rpt_exam_mark'] = $this->db->get('exm_mark em')->result_array(); 
+
+
+               /* $this->db->select('*');
+                $this->db->where('course_id', $data['course_id']);
+                //$this->db->where('em.batch_id', $data['batch_id']);
+                //$this->db->where('em.batch_id', $rbatch);
+                $this->db->where('year_no', $data['year_no']);
+                $this->db->where('semester_no', $data['semester_no']);
+                $this->db->where('student_id', $result_array[$i]['stu_id']);
+               
+                $this->db->where('exam_mark_deleted', 0);
+                $this->db->where('detail_deleted', 0);
+             
+                $this->db->where('is_repeat_mark', 1);
+                $this->db->where('sedr_deleted', 0);
+                $this->db->where('is_training_apply', 0);
+                $result_array[$i]['rpt_exam_mark'] = $this->db->get('rpt_marks ')->result_array(); */
             }
         }
 //        print_r($result_array);
