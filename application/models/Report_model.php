@@ -840,6 +840,8 @@ class Report_model extends CI_Model {
                               CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(GROUP_CONCAT(reg_no), "/", 5), "/", -1) AS UNSIGNED) AS CODE5');
         $this->db->join('edu_course edc', 'edc.id=sreg.course_id');
         $this->db->join('cfg_branch cfb', 'cfb.br_id=sreg.center_id');
+        $this->db->join('cfg_district cd', 'sreg.district=cd.code');
+        $this->db->join('com_religion cr', 'sreg.religion=cr.rel_id');
 
         if ($data['course_id'] != "all") {
             $this->db->where('sreg.course_id', $data['course_id']);

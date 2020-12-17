@@ -747,6 +747,16 @@ class Report extends CI_Controller {
 
         echo json_encode($stu_id_data);
     }
+    //kasun 2020-12-16
+    function search_info_students() {
+        $data['center_id'] = $this->input->post('center_id');
+        $data['course_id'] = $this->input->post('course_id');
+        $data['year'] = $this->input->post('year');
+
+        $stu_id_data = $this->Report_model->search_students_id_card_details_year_wise($data);
+
+        echo json_encode($stu_id_data);
+    }
 
     public function download_bulk_profile_images() {
         $center_id = $this->uri->segment(3);
@@ -799,6 +809,23 @@ class Report extends CI_Controller {
 
         $this->load->view('reports/student_id_card_report_pdf', $data);
     }
+    //Kasun 2020-12-16
+    function student_info_report_pdf() {
+        $data['center_id'] = $_GET['cen'];
+        $data['course_id'] = $_GET['cou'];
+        $data['year'] = $_GET['year'];
+
+        $data['center_name'] = $this->Report_model->get_center_by_id($data['center_id']);
+        if ($data['course_id'] == 'all') {
+            $data['course_name'] = 'All Courses';
+        } else {
+            $data['course_name'] = 'Course -' . $this->Report_model->get_course_by_id($data['course_id']);
+        }
+
+        $data['stu_id_card_data'] = $this->Report_model->search_students_id_card_details_year_wise($data);
+
+        $this->load->view('reports/student_info_report_pdf', $data);
+    }
 
     function student_id_card_report_excel() {
         $data['center_id'] = $_GET['cen'];
@@ -835,13 +862,82 @@ class Report extends CI_Controller {
             $object->getActiveSheet()->setCellValueByColumnAndRow(2, $excel_row, $row['reg_no']);
             $object->getActiveSheet()->setCellValueByColumnAndRow(3, $excel_row, $row['course_code']);
             $object->getActiveSheet()->setCellValueByColumnAndRow(4, $excel_row, $row['nic_no']);
-//            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+            //            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
             $excel_row++;
         }
 
         $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Student_Data.xls"');
+        $object_writer->save('php://output');
+
+        //$this->load->view('reports/student_id_card_report_pdf',$data);
+    }
+    //kasun 2020-12-16
+    function student_info_report_excel() {
+        $data['center_id'] = $_GET['cen'];
+        $data['course_id'] = $_GET['cou'];
+        $data['year'] = $_GET['year'];
+
+        //$data['stu_id_card_data'] = $this->Report_model->search_students_id_card_details($data);
+        $data = $this->Report_model->search_students_id_card_details_year_wise($data);
+        //var_dump($data);
+        $this->load->library("excel");
+        $object = new PHPExcel();
+
+        $object->setActiveSheetIndex(0);
+        $table_columns = array("Center Name", "Student Name", "REG No", "Course", "NIC","District","Mobile Number","Home Number","Address","E-Mail","Date of Birth","Gender","Civil Status","Religion");
+        $column = 0;
+
+        foreach ($table_columns as $field) {
+            $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+            $column++;
+        }
+        foreach (range('A', $object->getActiveSheet()->getHighestDataColumn()) as $col) {
+            $object->getActiveSheet()
+                    ->getColumnDimension($col)
+                    ->setAutoSize(true);
+        }
+        $from = "A1"; // or any value
+        $to = "N1"; // or any value
+        $object->getActiveSheet()->getStyle("$from:$to")->getFont()->setBold(true);
+        $excel_row = 2;
+
+        foreach ($data as $row) {
+            $temp_sex='';
+            $temp_civil_status='';
+            $object->getActiveSheet()->setCellValueByColumnAndRow(0, $excel_row, $row['br_name']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(1, $excel_row, $row['first_name']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(2, $excel_row, $row['reg_no']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(3, $excel_row, $row['course_code']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(4, $excel_row, $row['nic_no']);
+
+            $object->getActiveSheet()->setCellValueByColumnAndRow(5, $excel_row, $row['district']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(6, $excel_row, $row['mobile_no']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(7, $excel_row, $row['fixed_tp']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(8, $excel_row, $row['permanent_address']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(9, $excel_row, $row['email']);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(10, $excel_row, $row['birth_date']);
+            $temp_sex=$row['sex'];
+            if($temp_sex=="F")
+            $sex="Female";
+            elseif($temp_sex=="M")
+            $sex="Male";
+            $object->getActiveSheet()->setCellValueByColumnAndRow(11, $excel_row, $sex);
+            $temp_civil_status=$row['civil_status'];
+            if($temp_civil_status=="S")
+            $civil_status="Single";
+            elseif($temp_civil_status=="M")
+            $civil_status="Married";
+            $object->getActiveSheet()->setCellValueByColumnAndRow(12, $excel_row, $civil_status);
+            $object->getActiveSheet()->setCellValueByColumnAndRow(13, $excel_row, $row['rel_name']);
+            //            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+            $excel_row++;
+        }
+
+        $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Students_info.xls"');
         $object_writer->save('php://output');
 
         //$this->load->view('reports/student_id_card_report_pdf',$data);

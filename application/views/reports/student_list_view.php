@@ -19,6 +19,10 @@
     .affix-bottom {
         position: absolute;
     }
+    #stu_idcard_tbl_wrapper {
+        width: 100%;
+        overflow-x: scroll;
+    }
 
     /*    table{
             margin: 0 auto;
@@ -57,6 +61,7 @@
                                 <li role="presentation"><a class="fa fa-graduation-cap" href="#center_wise_detail_tab" aria-controls="center_wise_detail_tab" role="tab" data-toggle="tab"> Center wise Detail Summary</a></li>
                                 <li role="presentation"><a class="fa fa-graduation-cap" href="#deactivated_student_tab" aria-controls="deactivated_student_tab" role="tab" data-toggle="tab"> De-activated Student List</a></li>
                                 <li role="presentation"><a class="fa fa-graduation-cap" href="#rejected_student_tab" aria-controls="rejected_student_tab" role="tab" data-toggle="tab"> Rejected Student List</a></li>
+                                <li role="presentation"><a class="fa fa-graduation-cap" href="#student_info_tab" aria-controls="student_info_tab" role="tab" data-toggle="tab">Student Info List </a></li>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="full_summary_tab"><br/>
@@ -100,95 +105,95 @@
                                         </thead>
                                         <tbody id="tbl_body">
                                             <?php
-//                                            $i = 1;
-//                                            $total_student = 0;
-//                                            $total_approved = 0;
-//                                            $total_reject = 0;
-//                                            $total_not_approve = 0;
-//                                            
-//                                            $center_total_student = 0;
-//                                            $center_total_approved = 0;
-//                                            $center_total_reject = 0;
-//                                            $center_total_not_approve = 0;
-//                                            
-//                                            
-//                                            if (!empty($stu_all_count_array)) 
-//                                            {
-//                                                //foreach ($stu_all_count_array as $va) 
-//                                                for($k=0; $k < count($stu_all_count_array);$k++)
-//                                                {
-//                                                    $va = $stu_all_count_array[$k];
-//                                                    
-//                                                    if($k == 0)
-//                                                    {
-//
-//                                                        echo '<tr>'.
-//                                                            '<td>'.$va['br_name'].'</td>'.
-//                                                            '<td>'.$va['br_code'].'</td>'.
-//                                                            '<td style="white-space: initial;">'.$va['course_name'].'</td>'.
-//                                                            '<td>'.$va['course_code'].'</td>'.
-//                                                            '<td align="center">'. $va['stu_count'].'</td>'.  
-//                                                            '<td align="center">'.$va['apprv_status'] .'</td>'.
-//                                                            '<td align="center">'.$va['status'].'</td>'. 
-//                                                            '<td align="center">'.$va['reject_status'].'</td>'. 
-//                                                        '</tr>';
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        if($stu_all_count_array[$k-1]['br_code'] != $stu_all_count_array[$k]['br_code'])
-//                                                        {
-//                                                            echo '<tr style="font-weight:bold;">'.
-//
-//                                                                '<td style="border-right: 0;">'.$stu_all_count_array[$k-1]['br_name'].' ATI Total</td>'.
-//                                                                '<td style="border-right: 0;"></td>'.
-//                                                                '<td style="border-right: 0;"></td>'.
-//                                                                '<td></td>'.
-//                                                                '<td align="center">'.$center_total_student.'</td>'.
-//                                                                '<td align="center">'. $center_total_approved.'</td>'.
-//                                                                '<td align="center">'. $center_total_not_approve.'</td>'.
-//                                                                '<td align="center">'. $center_total_reject.'</td>'.
-//                                                            '</tr>';
-//                                                            
-//                                                            $center_total_student = 0;
-//                                                            $center_total_approved = 0;
-//                                                            $center_total_reject = 0;
-//                                                            $center_total_not_approve = 0;
-//                                                        }
-//                                                        echo '<tr>'.
-//                                                                    '<td>'.$va['br_name'].'</td>'.
-//                                                                    '<td>'.$va['br_code'].'</td>'.
-//                                                                    '<td style="white-space: initial;">'.$va['course_name'].'</td>'.
-//                                                                    '<td>'.$va['course_code'].'</td>'.
-//                                                                    '<td align="center">'. $va['stu_count'].'</td>'.  
-//                                                                    '<td align="center">'.$va['apprv_status'] .'</td>'.
-//                                                                    '<td align="center">'.$va['status'].'</td>'. 
-//                                                                    '<td align="center">'.$va['reject_status'].'</td>'. 
-//                                                                '</tr>';
-//                                                    }
-//                                                    $i++;
-//                                                    $center_total_student += $va['stu_count'];
-//                                                    $center_total_approved += $va['apprv_status'];
-//                                                    $center_total_reject += $va['reject_status'];
-//                                                    $center_total_not_approve += $va['status']; 
-//                                                    
-//                                                    $total_student += $va['stu_count'];
-//                                                    $total_approved += $va['apprv_status'];
-//                                                    $total_reject += $va['reject_status'];
-//                                                    $total_not_approve += $va['status']; 
-//                                                }
-//                                                echo '<tr style="font-weight:bold;">'.
-//
-//                                                '<td style="font-weight:bold; border-right: 0;">'.$stu_all_count_array[$k-1]['br_name'].' ATI Total</td>'.
-//                                                '<td style="border-right: 0;"></td>'.
-//                                                '<td style="border-right: 0;"></td>'.
-//                                                '<td></td>'.
-//                                                '<td align="center">'.$center_total_student.'</td>'.
-//                                                '<td align="center">'. $center_total_approved.'</td>'.
-//                                                '<td align="center">'. $center_total_not_approve.'</td>'.
-//                                                '<td align="center">'. $center_total_reject.'</td>'.
-//                                            '</tr>';
-//                                            }
-//                                            
+                                                                    //                                            $i = 1;
+                                                                    //                                            $total_student = 0;
+                                                                    //                                            $total_approved = 0;
+                                                                    //                                            $total_reject = 0;
+                                                                    //                                            $total_not_approve = 0;
+                                                                    //                                            
+                                                                    //                                            $center_total_student = 0;
+                                                                    //                                            $center_total_approved = 0;
+                                                                    //                                            $center_total_reject = 0;
+                                                                    //                                            $center_total_not_approve = 0;
+                                                                    //                                            
+                                                                    //                                            
+                                                                    //                                            if (!empty($stu_all_count_array)) 
+                                                                    //                                            {
+                                                                    //                                                //foreach ($stu_all_count_array as $va) 
+                                                                    //                                                for($k=0; $k < count($stu_all_count_array);$k++)
+                                                                    //                                                {
+                                                                    //                                                    $va = $stu_all_count_array[$k];
+                                                                    //                                                    
+                                                                    //                                                    if($k == 0)
+                                                                    //                                                    {
+                                                                    //
+                                                                    //                                                        echo '<tr>'.
+                                                                    //                                                            '<td>'.$va['br_name'].'</td>'.
+                                                                    //                                                            '<td>'.$va['br_code'].'</td>'.
+                                                                    //                                                            '<td style="white-space: initial;">'.$va['course_name'].'</td>'.
+                                                                    //                                                            '<td>'.$va['course_code'].'</td>'.
+                                                                    //                                                            '<td align="center">'. $va['stu_count'].'</td>'.  
+                                                                    //                                                            '<td align="center">'.$va['apprv_status'] .'</td>'.
+                                                                    //                                                            '<td align="center">'.$va['status'].'</td>'. 
+                                                                    //                                                            '<td align="center">'.$va['reject_status'].'</td>'. 
+                                                                    //                                                        '</tr>';
+                                                                    //                                                    }
+                                                                    //                                                    else
+                                                                    //                                                    {
+                                                                    //                                                        if($stu_all_count_array[$k-1]['br_code'] != $stu_all_count_array[$k]['br_code'])
+                                                                    //                                                        {
+                                                                    //                                                            echo '<tr style="font-weight:bold;">'.
+                                                                    //
+                                                                    //                                                                '<td style="border-right: 0;">'.$stu_all_count_array[$k-1]['br_name'].' ATI Total</td>'.
+                                                                    //                                                                '<td style="border-right: 0;"></td>'.
+                                                                    //                                                                '<td style="border-right: 0;"></td>'.
+                                                                    //                                                                '<td></td>'.
+                                                                    //                                                                '<td align="center">'.$center_total_student.'</td>'.
+                                                                    //                                                                '<td align="center">'. $center_total_approved.'</td>'.
+                                                                    //                                                                '<td align="center">'. $center_total_not_approve.'</td>'.
+                                                                    //                                                                '<td align="center">'. $center_total_reject.'</td>'.
+                                                                    //                                                            '</tr>';
+                                                                    //                                                            
+                                                                    //                                                            $center_total_student = 0;
+                                                                    //                                                            $center_total_approved = 0;
+                                                                    //                                                            $center_total_reject = 0;
+                                                                    //                                                            $center_total_not_approve = 0;
+                                                                    //                                                        }
+                                                                    //                                                        echo '<tr>'.
+                                                                    //                                                                    '<td>'.$va['br_name'].'</td>'.
+                                                                    //                                                                    '<td>'.$va['br_code'].'</td>'.
+                                                                    //                                                                    '<td style="white-space: initial;">'.$va['course_name'].'</td>'.
+                                                                    //                                                                    '<td>'.$va['course_code'].'</td>'.
+                                                                    //                                                                    '<td align="center">'. $va['stu_count'].'</td>'.  
+                                                                    //                                                                    '<td align="center">'.$va['apprv_status'] .'</td>'.
+                                                                    //                                                                    '<td align="center">'.$va['status'].'</td>'. 
+                                                                    //                                                                    '<td align="center">'.$va['reject_status'].'</td>'. 
+                                                                    //                                                                '</tr>';
+                                                                    //                                                    }
+                                                                    //                                                    $i++;
+                                                                    //                                                    $center_total_student += $va['stu_count'];
+                                                                    //                                                    $center_total_approved += $va['apprv_status'];
+                                                                    //                                                    $center_total_reject += $va['reject_status'];
+                                                                    //                                                    $center_total_not_approve += $va['status']; 
+                                                                    //                                                    
+                                                                    //                                                    $total_student += $va['stu_count'];
+                                                                    //                                                    $total_approved += $va['apprv_status'];
+                                                                    //                                                    $total_reject += $va['reject_status'];
+                                                                    //                                                    $total_not_approve += $va['status']; 
+                                                                    //                                                }
+                                                                    //                                                echo '<tr style="font-weight:bold;">'.
+                                                                    //
+                                                                    //                                                '<td style="font-weight:bold; border-right: 0;">'.$stu_all_count_array[$k-1]['br_name'].' ATI Total</td>'.
+                                                                    //                                                '<td style="border-right: 0;"></td>'.
+                                                                    //                                                '<td style="border-right: 0;"></td>'.
+                                                                    //                                                '<td></td>'.
+                                                                    //                                                '<td align="center">'.$center_total_student.'</td>'.
+                                                                    //                                                '<td align="center">'. $center_total_approved.'</td>'.
+                                                                    //                                                '<td align="center">'. $center_total_not_approve.'</td>'.
+                                                                    //                                                '<td align="center">'. $center_total_reject.'</td>'.
+                                                                    //                                            '</tr>';
+                                                                    //                                            }
+                                                                    //                                            
                                             ?>
                                         </tbody>
                                         <tfoot>
@@ -394,12 +399,12 @@
                                                 <tbody id="tbl_body">
 
                                                     <?php
-//                                                            $i = 1;
-//                                                            if (!empty($result_array)) {
-//                                                            foreach ($result_array as $va) {
-                                                    ?>
+                                            //                                                            $i = 1;
+                                            //                                                            if (!empty($result_array)) {
+                                            //                                                            foreach ($result_array as $va) {
+                                                                                                ?>
 
-<!--                                                        <tr>
+                                            <!--                                                        <tr>
                                                             <td align="center"> <?php //echo $i  ?></td>
                                                             <td> <?php //echo $va['reg_no']  ?></td>
                                                             <td> <?php //echo $va['first_name'] . " " . $va['last_name']  ?></td>
@@ -591,6 +596,103 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div role="tabpanel" class="tab-pane" id="student_info_tab"><br>
+
+                                <form class="form-horizontal" role="form" method="post" id="student_info_search_form" autocomplete="off">
+                                            <div class="row">
+                                                    <div class="col-md-2">
+                                                        <select class="form-control" id="student_year" name="student_year" onchange="info_student_year(this.value);" data-validation="required">
+                                                            <option value="">---Select Year---</option>
+                                                            <?php
+                                                            foreach ($mpyear_list as $yr):
+                                                                if ($yr['year'] != 0) {
+                                                                    ?>
+                                                                    <option value="<?php echo $yr['year']; ?>">
+                                                                        <?php echo $yr['year']; ?>
+                                                                    </option>
+                                                                    <?php
+                                                                }
+                                                            endforeach;
+                                                            ?>                   
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="center" class="col-md-3 control-label">Center : </label>
+                                                            <div class="col-md-7">  
+                                                                <?php
+                                                                global $branchdrop;
+                                                                global $selectedbr;
+                                                                ?>
+
+                                                                <select class="form-control" id="student_center" name="student_center" style="width:100%" data-validation="required" onchange="info_students_course_list(this.value)">
+                                                                    <option value="all">---All---</option>
+                                                                    <?php
+                                                                    foreach ($centers as $row):
+                                                                        ?>
+                                                                        <option value="<?php echo $row['br_id']; ?>">
+                                                                            <?php echo $row['br_code'] . " - " . $row['br_name']; ?>
+                                                                        </option>
+                                                                        <?php
+                                                                    endforeach;
+                                                                    ?>
+                                                                </select> 
+                                                            </div>
+                                                        </div>				
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="center" class="col-md-3 control-label">Course : </label>
+                                                            <div class="col-md-7">
+                                                                <select class="form-control" id="student_course" name="student_course" style="width:100%" data-validation="required" onchange="">
+                                                                    <option value="all">---All---</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>				
+                                                    </div>
+                                                </div>
+                                                <br>
+
+                                                <div class="row">
+                                                        
+                                                        <div class="col-md-10">
+                                                            
+                                                            <!--<a data-toggle='tooltip' title='Download Image' href='download_bulk_profile_images'  >Download All images</a>-->  
+                                                           
+                                                            <button type="button" style="float: right; margin-right: 12px;" id="SI_print_btn" name="SI_print_btn" class="btn btn-success" onclick="load_student_info_pdf();">Print PDF</button>
+                                                            <button type="button" style="float: right; margin-right: 12px;" id="SI_print_btn_excel" name="SI_print_btn_excel" class="btn btn-success" onclick="load_student_info_excel();">Print Excel</button>
+                                                            <button type="button" style="float: right; margin-right: 12px;" id="info_search" name="info_search" class="btn btn-primary btn-md" onclick="search_info_student_details();">Search</button>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <table id="stu_idcard_tbl" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Center</th>
+                                                                <th>Name</th>
+                                                                <th>Register No</th>
+                                                                <th>Course</th>
+                                                                <th>NIC</th>
+                                                                <th>District</th>
+                                                                <th>Mobile Number</th>
+                                                                <th>Home Number</th>
+                                                                <th>Address</th>
+                                                                <th>E-Mail Address</th>
+                                                                <th>Date of Birth</th>
+                                                                <th>Gender</th>
+                                                                <th>Civil Status</th>
+                                                                <th>Religion</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbl_body">
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                    </form>
+                                    
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -620,7 +722,7 @@
         $('#rejected_student_list_search_print_btn').attr('disabled', true);
 
         $('#student_list').DataTable({
-//            'scrollX':true,
+        //            'scrollX':true,
             'ordering': true,
             'lengthMenu': [10, 25, 50, 75, 100]
         });
@@ -653,9 +755,24 @@
             'paging': false
         });
 
-//        load_course_wise();
+        //        load_course_wise();
         $('#deactivate_student_list_tbl').DataTable();
         $('#rejected_student_list_tbl').DataTable();
+
+    ///=============== student info list====================== kasun 2020-12-16
+        $('#SI_print_btn').prop('disabled', true);
+        $('#SI_print_btn_excel').prop('disabled', true);
+        $('#info_search').prop('disabled', true);
+      
+        
+        $('#stu_idcard_tbl').DataTable({
+            'ordering': true,
+            'lengthMenu': [10, 25, 50, 75, 100],
+            'paging': false
+        });
+        
+
+     
 
     });
 
@@ -681,7 +798,7 @@
         $.post("<?php echo base_url('Report/student_course_wise_details_stu_info') ?>", {'type_val': type_val, 'year': year},
                 function (data)
                 {
-//                console.log(data);
+        //                console.log(data);
                     $('#center_full_sum').DataTable().destroy();
 
 
@@ -735,12 +852,12 @@
                                     }, 0);
 
                             // Total over this page
-//                        pageTotal = api
-//                            .column(5, {page: 'current'})
-//                            .data()
-//                            .reduce(function (a, b) {
-//                                return intVal(a) + intVal(b);
-//                        }, 0);
+                            //                        pageTotal = api
+                            //                            .column(5, {page: 'current'})
+                            //                            .data()
+                            //                            .reduce(function (a, b) {
+                            //                                return intVal(a) + intVal(b);
+                            //                        }, 0);
 
                             // Update footer
                             $(api.column(0).footer()).html(
@@ -991,7 +1108,7 @@
                                     data[j]['first_name'], //+ " " + data[j]['last_name'],
                                     data[j]['nic_no'],
                                     "[" + data[j]['course_code'] + "] - " + data[j]['course_name'],
-//                                    data[j]['cas1s']+"-"+data[j]['sub1g']+", "data[j]['cas2s'] + "-"+data[j]['sub2g']+", "+data[j]['cas3s']+"-"+data[j]['sub3g']+", "+data[j]['cas4s']+"-"+data[j]['sub4g'],
+                                    //                                    data[j]['cas1s']+"-"+data[j]['sub1g']+", "data[j]['cas2s'] + "-"+data[j]['sub2g']+", "+data[j]['cas3s']+"-"+data[j]['sub3g']+", "+data[j]['cas4s']+"-"+data[j]['sub4g'],
                                     data[j]['cas1s']+"-"+ data[j]['sub1g']+"<br> "+data[j]['cas2s']+"-"+ data[j]['sub2g']+"<br>"+data[j]['cas3s']+"-"+ data[j]['sub3g']+"<br>"+alsub4res+"<br>",
                                     "Maths - "+data[j]['olmathg']+"<br> English - "+data[j]['olenglishg'],
                                     ma
@@ -1032,7 +1149,7 @@
         var semester_no = $('#l_no_semester').val();
         var batch_id = $('#l_Bcode').val();
         var type_student = $('input[name=type_student]:checked').val();
-//alert(type_student);
+            //alert(type_student);
         window.open('<?php echo base_url("report/course_detail_summary_pdf") ?>?cen=' + center_id + '&cou=' + course_id + '&yr=' + year_no + '&sem=' + semester_no + '&bat=' + batch_id + '&type_student=' + type_student);
 
     }
@@ -1303,7 +1420,7 @@
                                 $('#deactivate_student_list_search_print_btn').attr('disabled', true);
                             }
                         }
-//                $('.se-pre-con').fadeOut('slow');
+                    //                $('.se-pre-con').fadeOut('slow');
                     },
                     "json"
                     );
@@ -1394,7 +1511,7 @@
                                 $('#rejected_student_list_search_print_btn').attr('disabled', true);
                             }
                         }
-//                $('.se-pre-con').fadeOut('slow');
+                        //                $('.se-pre-con').fadeOut('slow');
                     },
                     "json"
                     );
@@ -1417,11 +1534,143 @@
         var semester_no = $('#l_no_semester').val();
         var batch_id = $('#l_Bcode').val();
         var type_student = $('input[name=type_student]:checked').val();
-//alert(type_student);
+            //alert(type_student);
         window.open('<?php echo base_url("report/load_pdf_course_detail_print_excel") ?>?cen=' + center_id + '&cou=' + course_id + '&yr=' + year_no + '&sem=' + semester_no + '&bat=' + batch_id + '&type_student=' + type_student);
 
 
-        
-   
+      
     }
+
+      ///=============== student info list====================== kasun 2020-12-16
+     
+
+
+    function info_student_year(year) {
+            if (year == null || year == '') {
+                $('#info_search').prop('disabled', true);
+                $('#SI_print_btn_excel').prop('disabled', true);
+                $('#SI_print_btn').prop('disabled', true);
+            
+
+            } else {
+                $('#info_search').prop('disabled', false);
+                $('#SI_print_btn_excel').prop('disabled', false);
+                $('#SI_print_btn').prop('disabled', false);
+            }
+        }
+      
+    function info_students_course_list(center_id) {
+        $('#student_course').find('option').remove().end();
+        $("#student_course").prepend($("<option selected='selected'></option>").attr("value", "all").text("All"));
+        //$('#course_id').append('<option value="">---Select Course Code---</option>').val('');
+
+        $.post("<?php echo base_url('Report/load_course_list') ?>", {'center_id': center_id},
+                function (data)
+                {
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        $('#student_course').append($("<option></option>").attr("value", data[i]['course_id']).text(data[i]['course_code'] + ' - ' + data[i]['course_name']));
+                    }
+
+                    //load_batch_list($('#course_id').val());
+                },
+                "json"
+                );
+    }
+ 
+    function search_info_student_details(){
+        $('.se-pre-con').fadeIn('slow');
+        var center_id = $('#student_center').val();
+        var course_id = $('#student_course').val();
+        var year = $('#student_year').val();
+        
+
+        $.post("<?php echo base_url('Report/search_info_students') ?>", {'center_id': center_id, 'course_id': course_id, 'year':year},
+            function (data)
+            {
+                if(data == 'denied')
+                {
+                    funcres = {status:"denied", message:"You have no right to proceed the action"};
+                    result_notification(funcres);
+                }
+                else
+                {
+                    $('#stu_idcard_tbl').DataTable().destroy();
+                    $('#stu_idcard_tbl').DataTable().clear().draw();
+                        
+                    if (data.length > 0) 
+                    {
+                        $('#SI_print_btn').attr('disabled', false);
+                        $('#info_search').attr('disabled', false);
+                        $('#SI_print_btn_excel').attr('disabled', false);
+                        for (j = 0; j < data.length; j++) {
+
+                            number_content = "<td align='center'>" + (j + 1) + "</td>";
+                            
+                      
+                        var District,M_no,H_no,address,email,dob,gender,civil_s,religen;
+                            District=data[j]['district'];
+                            M_no=data[j]['mobile_no'];
+                            H_no=data[j]['fixed_tp'];
+                            address=data[j]['permanent_address'];
+                            email=data[j]['email'];
+                            dob=data[j]['birth_date'];
+                            gender=data[j]['sex'] ="F" ?  "Female":"Male";
+                            civil_temp=data[j]['civil_status'];
+                            civil_s=civil_temp="S" ? "Single":"Married";
+                            religen=data[j]['rel_name'];
+
+                            
+                           
+                            
+                            $('#stu_idcard_tbl').DataTable().row.add([
+                                "[" + data[j]['br_code'] + "] - " + data[j]['br_name'],
+                                data[j]['first_name'],
+                                data[j]['reg_no'],
+                                "[" + data[j]['course_code'] + "] - " + data[j]['course_name'], //+ " " + data[j]['last_name'],
+                                data[j]['nic_no'],
+                                District,
+                                M_no,
+                                H_no,
+                                address,
+                                email,
+                                dob,
+                                gender,
+                                civil_s,
+                                religen
+                            ]).draw(false);
+                        }
+                        $('.se-pre-con').fadeOut('slow');
+                    }
+                    else{
+                         $('.se-pre-con').fadeOut('slow');
+                        $('#SI_print_btn').attr('disabled', true);
+                    }
+                }
+            },
+            "json"
+            );
+
+
+    }
+    function load_student_info_excel(){
+        
+        var center_id = $('#student_center').val();
+        var course_id = $('#student_course').val();
+        var year = $('#student_year').val();
+
+        window.open('<?php echo base_url("report/student_info_report_excel") ?>?cen=' + center_id +'&cou=' +course_id + '&year='+year);
+     
+    }
+    function load_student_info_pdf(){
+        
+        var center_id = $('#student_center').val();
+        var course_id = $('#student_course').val();
+        var year = $('#student_year').val();
+
+        window.open('<?php echo base_url("report/student_info_report_pdf") ?>?cen=' + center_id +'&cou=' +course_id +'&year='+year);
+  
+         
+    }
+    
 </script>
