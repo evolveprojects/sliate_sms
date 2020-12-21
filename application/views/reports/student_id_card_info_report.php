@@ -70,15 +70,15 @@
                                     global $branchdrop;
                                     global $selectedbr;
 
-//                                    if(isset($stu_data))
-//                                    {
-//                                        $selectedbr = $stu_data['center_id'];
-//                                    }
-//
-//                                    $extraattrs = 'id="center_id" class="form-control" style="width:100%" data-validation="required" data-validation-error-msg-required="Field can not be empty" onchange="load_course_list(this.value,null,this);"';
-//
-//                                    echo form_dropdown('center_id',$branchdrop,$selectedbr, $extraattrs);
-                                    ?>
+                                    //                                    if(isset($stu_data))
+                                    //                                    {
+                                    //                                        $selectedbr = $stu_data['center_id'];
+                                    //                                    }
+                                    //
+                                    //                                    $extraattrs = 'id="center_id" class="form-control" style="width:100%" data-validation="required" data-validation-error-msg-required="Field can not be empty" onchange="load_course_list(this.value,null,this);"';
+                                    //
+                                    //                                    echo form_dropdown('center_id',$branchdrop,$selectedbr, $extraattrs);
+                                                                        ?>
                                     
                                     <select class="form-control" id="center_id" name="center_id" style="width:100%" data-validation="required" onchange="load_course_list(this.value)">
                                         <option value="">---Select center---</option>
@@ -258,11 +258,11 @@
         var course_id = $('#course_id').val();
         var year = $('#fullsumyear').val();
         
-//        $.post("<?php echo base_url('Report/download_bulk_profile_images') ?>", {'center_id': center_id, 'course_id': course_id},
-//        function (data)
-//        {
-//            
-//        });
+            //        $.post("<?php echo base_url('Report/download_bulk_profile_images') ?>", {'center_id': center_id, 'course_id': course_id},
+            //        function (data)
+            //        {
+            //            
+            //        });
         cenName = $('#center_id option:selected').text().split("-");
         courseName = $('#course_id option:selected').text().split("-");
         //alert(cenName[0] + "   " + courseName[0]);
@@ -277,13 +277,13 @@
 
         window.open('<?php echo base_url("report/student_id_card_report_pdf") ?>?cen=' + center_id +'&cou=' +course_id +'&year='+year);
   
-//          $.ajax({
-//            type: "POST",
-//            url: "<?php //echo base_url("report/imageResize")?>",
-//            data: {}
-//          }).done(function(msg) {
-//            alert( "Image Resized" + msg );
-//          });    
+            //          $.ajax({
+            //            type: "POST",
+            //            url: "<?php //echo base_url("report/imageResize")?>",
+            //            data: {}
+            //          }).done(function(msg) {
+            //            alert( "Image Resized" + msg );
+            //          });    
     }
     
     function load_student_id_card_excel(){
@@ -294,13 +294,13 @@
 
         window.open('<?php echo base_url("report/student_id_card_report_excel") ?>?cen=' + center_id +'&cou=' +course_id + '&year='+year);
   
-//          $.ajax({
-//            type: "POST",
-//            url: "<?php //echo base_url("report/imageResize")?>",
-//            data: {}
-//          }).done(function(msg) {
-//            alert( "Image Resized" + msg );
-//          });    
+        //          $.ajax({
+        //            type: "POST",
+        //            url: "<?php //echo base_url("report/imageResize")?>",
+        //            data: {}
+        //          }).done(function(msg) {
+        //            alert( "Image Resized" + msg );
+        //          });    
     }
     
     
