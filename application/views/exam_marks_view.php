@@ -1258,6 +1258,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
             $('#grade_'+text_id).val('AB');
             $('#result_grade_'+text_id).val('');
             $('#marks_'+text_id+'_2_'+grading_id).attr("readonly", true);
+            $('#marks_'+text_id+'_2_'+grading_id).val(0);
             $('#total_note_label').text('');
            // $('#marks_'+text_id+'_2_'+grading_id).val(null);
         } else {

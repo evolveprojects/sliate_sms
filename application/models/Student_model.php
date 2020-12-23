@@ -2242,7 +2242,8 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
         $this->db->join('exm_semester_exam_details sed', 'se.id = sed.semester_exam_id');
 
         $this->db->join('mod_subject co', 'co.id = sed.subject_id');
-        $this->db->where('se.exam_id', $current_stu_exam);
+        $this->db->where('se.exam_id', $data['exam_id']);
+       // $this->db->where('se.exam_id', $current_stu_exam);
         $this->db->where('se.course_id', $data['course_id']);
         $this->db->where('se.year_no', $data['year_no']);
         $this->db->where('se.semester_no', $data['semester_no']);
