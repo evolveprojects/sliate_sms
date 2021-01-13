@@ -1665,7 +1665,9 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
 
                     },
                         function (data) {
-                            //console.info(data);
+                         //   console.info(data);
+                         //   console.log(data);
+                         var FRLable='';
                             $('#exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
                                 $('#prnt_load_repeat_student_data_report_btn').removeAttr('disabled');
@@ -1684,10 +1686,12 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                         var rel_result_rpt = 0;
                                         
                                         if(data[j]['exam_mark'][z]['release_result'] == 1){
+                                           // console.log(data[j]['exam_mark'][z]['subject_code']);
+                                         //   console.log(data[j]['applied_subjects']);
                                             var examData = searchArray(data[j]['exam_mark'][z]['subject_code'],data[j]['applied_subjects']);
                                             if (typeof examData == 'undefined' || examData == null){ // no data in exam mark table
                                                 //mark = "INC"; 
-                                                mark = "";
+                                                mark = "-";
                                             } else if(examData['repeat_reject'] == '3') {
                                                 mark = "NE"; 
                                             } else if(data[j]['exam_mark'][z]['is_ex_director_mark_approved'] == 1){
@@ -1723,9 +1727,13 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                         subjects_marks[data[j]['exam_mark'][z]['subject_id']] = mark;
        
                                     }
-                                    
+                                      //fraud student display
+                                      if(data[j]['fraud_status']==1){
+                                                                        FRLable='background-color:red;';
+                                                                    }
+                                  //  console.log(subjects_marks);
                                     $('#rpt_exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="text-align:center; width:10%;">${applied_subjects.includes(e) ? '<span>' + subjects_marks[e] + '</span></a>' : " "}</td>`)
+                                        .map(e => `<td style="text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<span>' + subjects_marks[e] + '</span></a>' : " "}</td>`)
                                         .join(''))
                                         .appendTo($('#exam_marks_load_student'));
                                 
@@ -1750,9 +1758,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></scrip
                                     }
                                 }
 
-                                $('#rpt_exam_marks_tbl tr:last').append('<td align="center">'+gpa+'</td>').appendTo($('#exam_marks_load_student'));
+                                $('#rpt_exam_marks_tbl tr:last').append('<td align="center" style="text-align:center; width:10%;'+FRLable+'">'+gpa+'</td>').appendTo($('#exam_marks_load_student'));
                                         applied_subjects=[];
                                         subjects_marks=[];
+                                        FRLable='';
                                 }
 
                             } else {

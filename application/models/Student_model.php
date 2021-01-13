@@ -1796,7 +1796,7 @@ class Student_model extends CI_Model
     function load_rpt_student_for_exam_marks_approval_hod_ca($data)
     {
         //get Students
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = eser.stu_id');
@@ -1944,7 +1944,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
     function load_rpt_student_for_exam_marks_approval_dir_ca($data)
     {
         //get Students
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = eser.stu_id');
@@ -2102,7 +2102,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
     function load_rpt_student_for_exam_marks_approval_dir_se($data)
     {
     
-        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id');
+        $this->db->select('SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order, sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = eser.stu_id');
@@ -3968,7 +3968,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
     
     function load_rpt_student_for_exam_marks_ca($data)
     {
-        $this->db->select('sedr.is_repeat,sedr.repeat_apply_for,sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
+        $this->db->select('sedr.is_repeat,sedr.repeat_apply_for,sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
         $this->db->join('exm_semester_exam_details_repeat sedr', 'esed.id = sedr.exm_semester_exam_details');
@@ -4036,7 +4036,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
                 /// load repeate students
                 $this->db->select('em.id,em.student_id,em.subject_id,em.total_marks,em.overall_grade,em.result,em.is_hod_mark_aproved,em.is_director_mark_approved,
                 em.deleted,em.exam_status,co.`code` AS subject_code,ed.mark,ed.persentage,ed.exam_type_id,ed.is_director_mark_approved AS detail_is_director_mark_approved,
-                ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for');//,sedr.is_repeat,sedr.repeat_apply_for
+                ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_deleted,em.is_repeat_approve,em.is_repeat_mark,em.sem_exam_id,sedr.is_repeat,sedr.repeat_apply_for,em.fraud_status');//,sedr.is_repeat,sedr.repeat_apply_for
                 $this->db->join('exm_mark_details ed', 'em.id = ed.exam_mark_id');
                 $this->db->join('exm_semester_exam_details esed', 'em.student_id = esed.student_id AND em.subject_id = esed.subject_id');
                
@@ -4083,7 +4083,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
     
     function load_rpt_student_for_exam_marks_se($data)
     {
-        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order');
+        $this->db->select('sr.stu_id,sr.reg_no,sr.admission_no,sr.first_name,sr.last_name,sr.batch_id, SUBSTRING_INDEX(sr.reg_no, "/", -1) as regno_order,IFNULL((SELECT count(stu_id) FROM exam_fraud_students WHERE stu_id=sr.stu_id AND course_id =ese.course_id AND year_no=ese.year_no AND semester_no=ese.semester_no AND batch_id=ese.batch_id AND sem_exam_id=ese.exam_id), 0) as fraud_status');
         $this->db->join('exm_semester_exam ese', 'eser.semester_exam_id = ese.exam_id');
         $this->db->join('exm_semester_exam_details esed', 'eser.exm_semester_exam_details = esed.id');
         $this->db->join('stu_reg sr', 'sr.stu_id = eser.stu_id');

@@ -4054,7 +4054,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
         $this->db->where('eser.applying_year', $data['year_no']);
         $this->db->where('eser.applying_semester', $data['semester_no']);
         $this->db->where('eser.center_id', $data['center_id']);
-        $this->db->where('eser.applying_batch', $data['batch_id']);
+        //$this->db->where('eser.applying_batch', $data['batch_id']);
         if ($ug_level == 5) {
             $this->db->where('eser.stu_id', $this->session->userdata('user_ref_id'));
         }
@@ -4066,7 +4066,7 @@ ed.is_hod_mark_aproved as detail_is_hod_mark_aproved,ed.deleted as detail_delete
             $this->db->select('se.subject_type, se.subject_code,se.is_approved,se.subject_id,se.repeat_reject, se.rpt_is_absent,'
                     . 'se.rpt_is_absent_approve, se.rpt_absent_deferement');
             $this->db->where('se.course_id', $data['course_id']);
-            $this->db->where('se.applying_batch', $data['batch_id']);
+           // $this->db->where('se.applying_batch', $data['batch_id']);
             $this->db->where('se.applying_year', $data['year_no']);
             $this->db->where('se.applying_semester', $data['semester_no']);
             $this->db->where('se.applying_exam', $data['exam_id']);
@@ -4083,6 +4083,18 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->where('em.semester_no', $data['semester_no']);
             $this->db->where('em.student_id', $result_array[$i]['stu_id']);
             $result_array[$i]['exam_mark'] = $this->db->get('repeat_exam_applied_students_marks_view em')->result_array();
+
+            //fraud status  //fraud_status
+            $this->db->select('count(stu_id) as count ');
+            $this->db->where('course_id', $data['course_id']);
+           // $this->db->where('se.applying_batch', $data['batch_id']);
+            $this->db->where('year_no', $data['year_no']);
+            $this->db->where('semester_no', $data['semester_no']);
+            $this->db->where('sem_exam_id', $data['exam_id']);
+            $this->db->where('stu_id', $result_array[$i]['stu_id']);
+            $temp_array = $this->db->get('exam_fraud_students')->result_array();
+            $result_array[$i]['fraud_status']=$temp_array[0]['count'];
+
         }
         return $result_array;
     }
@@ -4300,10 +4312,11 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
         $this->db->where('eser.applying_year', $data['year_no']);
         $this->db->where('eser.applying_semester', $data['semester_no']);
         $this->db->where('eser.center_id', $data['center_id']);
-        $this->db->where('eser.applying_batch', $data['batch_id']);
+       // $this->db->where('eser.applying_batch', $data['batch_id']);
         if ($ug_level == 5) {
             $this->db->where('eser.stu_id', $this->session->userdata('user_ref_id'));
         }
+        $this->db->group_by('eser.stu_id');
         $this->db->order_by('CAST(regno_order as SIGNED INTEGER)', 'ASC');
         $result_array = $this->db->get('repeat_exam_student_details_view eser')->result_array();
 
@@ -4311,7 +4324,7 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->select('se.subject_type, se.subject_code,se.is_approved,se.subject_id,se.rpt_is_absent,'
                     . 'se.rpt_is_absent_approve, se.rpt_absent_deferement, se.is_repeat');
             $this->db->where('se.course_id', $data['course_id']);
-            $this->db->where('se.applying_batch', $data['batch_id']);
+           // $this->db->where('se.applying_batch', $data['batch_id']);
             $this->db->where('se.applying_year', $data['year_no']);
             $this->db->where('se.applying_semester', $data['semester_no']);
             $this->db->where('se.applying_exam', $data['exam_id']);
@@ -4327,6 +4340,23 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->where('em.semester_no', $data['semester_no']);
             $this->db->where('em.student_id', $result_array[$i]['stu_id']);
             $result_array[$i]['exam_mark'] = $this->db->get('repeat_exam_applied_students_marks_view em')->result_array();
+            //get fraud status
+            $year_temp=explode("-",$data['year_no']);
+            if(isset($year_temp[0]))
+            {
+                $year=$year_temp[0];
+            }else{
+                $year='';
+            }
+            $this->db->select('count(stu_id) as fraud_status');
+            $this->db->where('course_id', $data['course_id']);
+            $this->db->where('batch_id', $data['batch_id']);
+            $this->db->where('year_no', $year);
+            $this->db->where('semester_no', $data['semester_no']);
+            $this->db->where('sem_exam_id', $data['exam_id']);
+            $this->db->where('stu_id', $result_array[$i]['stu_id']);
+            $fraudStatus=$this->db->get('exam_fraud_students')->result_array();
+            $result_array[$i]['fraud_status']=isset($fraudStatus[0]['fraud_status']) ? $fraudStatus[0]['fraud_status']:0;
         }
         return $result_array;
     }
@@ -4842,7 +4872,7 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $this->db->where('sem_exam_id', $data['exam_id']);
             $this->db->where('stu_id', $result_array['students'][$i]['stu_id']);
             $fraudStatus=$this->db->get('exam_fraud_students ')->result_array();
-            $result_array['students'][$i]['fraud_status']=$fraudStatus[0]['fraud_status'];
+            $result_array['students'][$i]['fraud_status']=isset($fraudStatus[0]['fraud_status']) ? $fraudStatus[0]['fraud_status']:0;
 
             //$this->db->select('*');
             $this->db->select('es.subject_type, es.subject_code, es.is_approved, es.is_repeat');

@@ -256,7 +256,7 @@ class Exam_model extends CI_Model
         $this->db->where('ese.course_id', $data['mrk_course']);
         $this->db->where('eser.applying_year', $data['mrk_year']);
         $this->db->where('eser.applying_semester', $data['mrk_semester']);
-        $this->db->where('eser.applying_batch', $data['mrk_batch']);
+       // $this->db->where('eser.applying_batch', $data['mrk_batch']);
         $this->db->where('ese.is_approved', 1);
         //$this->db->where('eser.is_repeat_approved', 1);
         $this->db->where('eser.deleted', 0);
@@ -2881,6 +2881,7 @@ class Exam_model extends CI_Model
         $this->db->where('se.is_attend', 0);
         $this->db->where('se.is_exam_held', 1);
         $this->db->where('se.deleted', 0);
+        $this->db->group_by('ex.id');
         
         $result_array = $this->db->get('exm_semester_exam_details_repeat se')->result_array();
         return $result_array;

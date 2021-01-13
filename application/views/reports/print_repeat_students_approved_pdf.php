@@ -99,6 +99,8 @@ $subjectHeaders .= '<th align="center"><b>SGPA</b></th>';
 
 $y = 1;
 foreach ($student_repeat_array as $va) {
+   // var_dump($va);
+    //echo '<br>';
     for($x = 0; $x < count($va['exam_mark']); $x++){
         array_push($body_subj, $va['exam_mark'][$x]['subject_code']);
     }
@@ -109,8 +111,12 @@ foreach ($student_repeat_array as $va) {
         
         if($va['exam_mark'][$z]['release_result'] == 1){
             $examData = searchArray($va['exam_mark'][$z]['subject_code'], $va['applied_subjects']);
+          //  var_dump($va['exam_mark'][$z]['subject_code']);
+           // echo ':';
+            //var_dump($va['applied_subjects']);
+           // echo '<br>';
             if(empty($examData)){
-                //$mark = "INC";
+               // $mark = "INC";
                 $mark = "";
             }else if (($examData['is_approved'] == '3' || $examData['is_approved'] == '4') && $examData['is_repeat'] != 1){ //rejected
                 $mark = "NE";
@@ -147,7 +153,10 @@ foreach ($student_repeat_array as $va) {
     }
  
     for ($t = 0; $t < count($header_subj); $t++) {        
-        if(in_array($header_subj[$t], $body_subj)){                
+        if(in_array($header_subj[$t], $body_subj)){  
+            if($va['fraud_status']==1)           
+            $subjects .= '<td align="center" style="">***</td>';
+            else          
             $subjects .= '<td align="center">'.$subjects_marks[$header_subj[$t]].'</td>';
         }
         else{
@@ -159,7 +168,12 @@ foreach ($student_repeat_array as $va) {
         $subjects .= '<td align="center">Results not released.</td>';
     }
     else{
-        $subjects .= '<td align="center">'.$va['gpa'].'</td>';
+        if($va['fraud_status']==1) {
+            $subjects .= '<td align="center" style="">***</td>';
+        }else{
+            $subjects .= '<td align="center">'.$va['gpa'].'</td>';
+        }
+        
     }
     
     $item .= '<tr nobr="true" style="height: 20px;">'.
@@ -206,6 +220,7 @@ $content = '<table border="0.5" style="width:100%; vertical-align:center;" cells
         '<br>'.
         '<br>'.
         '<br>'.
+       // '<h1>kasun</h1>'.
         $table;
 
 

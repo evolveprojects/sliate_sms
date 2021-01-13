@@ -137,7 +137,7 @@
                         </tr>
                         </thead>
                         <tbody id="subject_approval_load_student">
-<!--                        <tr>
+                        <!--                        <tr>
                             <td colspan="10" align="center">No records to show.</td>
                         </tr>-->
                         </tbody>
@@ -486,7 +486,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-md-3 control-label">Batch Code:</label>
+                                <label for="inputEmail3" class="col-md-3 control-label" id="lbl_batch_code"> Batch Code:</label>
                                 <div class="col-md-9">
                                     <select type="text" class="form-control" id="eh_batch" name="eh_batch" required
                                             placeholder="field cannot be empty" data-validation="required"
@@ -3972,10 +3972,12 @@ var rpt_selected_batch = "";
         if(sel_id == "C"){
             $('#search_students').show();
             $('#search_students_repeat').hide();
+            $("#lbl_batch_code").text("Batch Code:");
         }
         else{
             $('#search_students').hide();
             $('#search_students_repeat').show();
+            $("#lbl_batch_code").text("Applying Batch Code:");
         }
         
         $('#load_absent_thead').find('tr').remove();

@@ -1256,7 +1256,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
             $('#'+txtbox_id).removeAttr('value');
             $('#totalmark_'+text_id).val(0);
             $('#grade_'+text_id).val('AB');
-            $('#result_grade_'+text_id).val('');
+            $('#result_grade_'+text_id).val('AB');
             $('#marks_'+text_id+'_2_'+grading_id).attr("readonly", true);
             $('#marks_'+text_id+'_2_'+grading_id).val(0);
             $('#total_note_label').text('');
@@ -1908,6 +1908,7 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                             $('#rpt_exam_marks_tbl').DataTable().clear();
                             $("#rpt_exam_marks_tbl").find('tbody').empty();
                             $('#load_rpt_thead').find('tr').remove();
+                            var FRLable='';
                             if (data.length > 0) {
 
                                 $('#rpt_exam_marks_tbl').DataTable().rows().remove();
@@ -2107,16 +2108,21 @@ echo form_dropdown('rpt_centre', $branchdrop, $selectedbr, $extraattrs);
                                            // }
                                         }
                                     }
+                                      //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
 
 
                                         $('#rpt_exam_marks_tbl tr:last').append(rpt_sem_subject_ids
-                                            .map(e => `<td style="`+rpt_style_cell[e]+`text-align:center; width: 10%;">${rpt_applied_subjects.includes(e) ? '<a id="' + data[j]['stu_id'] + '_rpt_subject_mark_' + e + '" href="javascript:open_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 1);"><span>' + rpt_subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                            .map(e => `<td style="`+rpt_style_cell[e]+`text-align:center; width: 10%;`+FRLable+`">${rpt_applied_subjects.includes(e) ? '<a id="' + data[j]['stu_id'] + '_rpt_subject_mark_' + e + '" href="javascript:open_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\', 1);"><span>' + rpt_subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                             .join(''))
                                             .appendTo($('#load_rpt_student'));
 
                                     rpt_applied_subjects = [];
                                     rpt_subjects_marks = {};
                                     rpt_style_cell = [];
+                                    FRLable='';
 
                                 }
 

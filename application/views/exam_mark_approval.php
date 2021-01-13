@@ -2003,7 +2003,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                                     FRLable='background-color:red;';
                                    }
                                     $('#rpt_exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+hod_rpt_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+hod_rpt_style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#rpt_exam_marks_load_student'));
                                     applied_subjects = [];
@@ -2327,7 +2327,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                         },
                         function (data) {
                             //console.log(data);
-
+                            var FRLable='';
                             $('#rpt_exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
 
@@ -2427,14 +2427,19 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
 
 
                                     //console.log(sbj_stat_array);
+                                      //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
 
                                     $('#rpt_exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+dir_rpt_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+dir_rpt_style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#rpt_exam_marks_load_student'));
                                     applied_subjects = [];
                                     subjects_marks = {};
                                     dir_rpt_style_cell = [];
+                                    FRLable='';
                                 }
                             $('.se-pre-con').fadeOut('slow');
                             } else {
@@ -2769,7 +2774,7 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
                         },
                         function (data) {
                             //console.log(data);
-
+                            var FRLable='';
                             $('#rpt_exam_marks_load_student').find('tr').remove();
                             if (data.length > 0) {
 
@@ -2873,14 +2878,19 @@ echo form_dropdown('rpt_prom_centre', $branchdrop, $selectedbr, $extraattrs);
 
 
                                     //console.log(sbj_stat_array);
+                                      //fraud student display
+                                   if(data[j]['fraud_status']==1){
+                                    FRLable='background-color:red;';
+                                   }
 
                                     $('#rpt_exam_marks_tbl tr:last').append(sem_subject_ids
-                                        .map(e => `<td style="`+rpt_style_cell[e]+`text-align:center; width:10%;">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
+                                        .map(e => `<td style="`+rpt_style_cell[e]+`text-align:center; width:10%;`+FRLable+`">${applied_subjects.includes(e) ? '<a  id="' + data[j]['stu_id'] + '_subject_mark_' + e + '" href="javascript:open_mark_model(' + batch_id + ',' + data[j]['stu_id'] + ',\'' + e + '\',' + sbj_stat_array[e] + ', 1);"><span>' + subjects_marks[e] + '</span></a>' : "--"}</td>`)
                                         .join(''))
                                         .appendTo($('#rpt_exam_marks_load_student'));
                                     applied_subjects = [];
                                     subjects_marks = {};
                                     rpt_style_cell = [];
+                                    FRLable='';
                                 }
                             $('.se-pre-con').fadeOut('slow');
 
