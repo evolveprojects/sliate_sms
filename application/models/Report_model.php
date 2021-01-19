@@ -4085,12 +4085,23 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             $result_array[$i]['exam_mark'] = $this->db->get('repeat_exam_applied_students_marks_view em')->result_array();
 
             //fraud status  //fraud_status
+            //SELECT `semester_exam_id` FROM `exm_semester_exam_details_repeat` WHERE `applying_exam`=16 AND `stu_id`=4413 GROUP BY `stu_id`
+           
+            $this->db->select('semester_exam_id ');
+            $this->db->where('applying_exam', $data['exam_id']);
+            $this->db->where('stu_id', $result_array[$i]['stu_id']);
+            $this->db->group_by('stu_id');
+            $temp_sem_exam_id = $this->db->get('exm_semester_exam_details_repeat')->result_array();
+            $sem_exam_id=isset($temp_sem_exam_id[0]['semester_exam_id']) ? $temp_sem_exam_id[0]['semester_exam_id']:'';
+
+
+
             $this->db->select('count(stu_id) as count ');
             $this->db->where('course_id', $data['course_id']);
            // $this->db->where('se.applying_batch', $data['batch_id']);
             $this->db->where('year_no', $data['year_no']);
             $this->db->where('semester_no', $data['semester_no']);
-            $this->db->where('sem_exam_id', $data['exam_id']);
+            $this->db->where('sem_exam_id', $sem_exam_id);
             $this->db->where('stu_id', $result_array[$i]['stu_id']);
             $temp_array = $this->db->get('exam_fraud_students')->result_array();
             $result_array[$i]['fraud_status']=$temp_array[0]['count'];
@@ -4348,12 +4359,24 @@ em.detail_is_hod_mark_aproved,em.detail_deleted,em.result,em.is_repeat_approve,e
             }else{
                 $year='';
             }
+
+
+            $this->db->select('semester_exam_id ');
+            $this->db->where('applying_exam', $data['exam_id']);
+            $this->db->where('stu_id', $result_array[$i]['stu_id']);
+            $this->db->group_by('stu_id');
+            $temp_sem_exam_id = $this->db->get('exm_semester_exam_details_repeat')->result_array();
+            $sem_exam_id=isset($temp_sem_exam_id[0]['semester_exam_id']) ? $temp_sem_exam_id[0]['semester_exam_id']:'';
+
+
+
+
             $this->db->select('count(stu_id) as fraud_status');
             $this->db->where('course_id', $data['course_id']);
             $this->db->where('batch_id', $data['batch_id']);
             $this->db->where('year_no', $year);
             $this->db->where('semester_no', $data['semester_no']);
-            $this->db->where('sem_exam_id', $data['exam_id']);
+            $this->db->where('sem_exam_id', $sem_exam_id);
             $this->db->where('stu_id', $result_array[$i]['stu_id']);
             $fraudStatus=$this->db->get('exam_fraud_students')->result_array();
             $result_array[$i]['fraud_status']=isset($fraudStatus[0]['fraud_status']) ? $fraudStatus[0]['fraud_status']:0;
