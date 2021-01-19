@@ -132,7 +132,7 @@ class Exam extends CI_Controller {
             if(isset($user_level[0])){
                 $data['user_level'] = $user_level[0];
                 $data['main_content'] = 'exam_marks_view';
-                $data['title'] = 'EXAM MARKS';
+                $data['title'] = 'EXAM MARKS ';
                 $this->load->view('includes/template', $data);
             }
             else{
@@ -148,7 +148,7 @@ class Exam extends CI_Controller {
                 $this->load->view('includes/template', $data);
             }
             else{
-                $message_403 = "You don't have access to the url you where trying to reach.";
+                $message_403 = " You don't have access to the url you where trying to reach.";
                 show_error($message_403 , 403 );
             }
         }
@@ -164,7 +164,7 @@ class Exam extends CI_Controller {
                 $this->load->view('includes/template', $data);
             }
             else{
-                $message_403 = "You don't have access to the url you where trying to reach.";
+                $message_403 = "You don't have access to the url you where trying to reach .";
                 show_error($message_403 , 403 );
             }
         }

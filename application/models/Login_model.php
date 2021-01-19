@@ -29,15 +29,15 @@ function authenticateLogin()
 		$branch = $this->get_branchdetails($result['ug_branch']);
 
 		$this->session->set_userdata('u_name',$result['user_name']);
-                $this->session->set_userdata('u_pass',$result['user_password']);
+        $this->session->set_userdata('u_pass',$result['user_password']);
 		$this->session->set_userdata('u_id',$result['user_id']);
 		$this->session->set_userdata('u_ugroup',$result['user_ugroup']);
 		$this->session->set_userdata('u_emp',$result['user_employee']);
 		$this->session->set_userdata('u_group',$result['ug_company']);
 		$this->session->set_userdata('u_branch',$result['br_name']);
-                $this->session->set_userdata('u_br_code',$result['br_code']);
-                $this->session->set_userdata('user_branch',$result['user_branch']);
-                $this->session->set_userdata('user_ref_id',$result['user_ref_id']);
+        $this->session->set_userdata('u_br_code',$result['br_code']);
+        $this->session->set_userdata('user_branch',$result['user_branch']);
+        $this->session->set_userdata('user_ref_id',$result['user_ref_id']);
 		$this->session->set_userdata('u_compname',$branch['br_name']);
 	    $this->session->set_userdata('u_compaddline1',$branch['br_addl1']);
 	    $this->session->set_userdata('u_compaddline2',$branch['br_addl2']);
